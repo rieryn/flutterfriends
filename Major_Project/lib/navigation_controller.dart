@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
-import 'map_page.dart';
-import 'people_page.dart';
+import 'home_page/home_page.dart';
+import 'places_page/places_page.dart';
+import 'people_page/people_page.dart';
 
 class NavigationController extends StatefulWidget {
   @override
@@ -13,10 +13,10 @@ class _NavigationControllerState extends State<NavigationController> {
     HomePage(
       key: PageStorageKey('home_page'),
     ),
+    PeoplePage(key: PageStorageKey('people_page')),
     MapPage(
       key: PageStorageKey('map_page'),
     ),
-    PeoplePage(key: PageStorageKey('people_page'))
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -28,8 +28,8 @@ class _NavigationControllerState extends State<NavigationController> {
         currentIndex: selectedIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.map_sharp), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.map_sharp), label: 'People'),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'People'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_sharp), label: 'Places'),
         ],
       );
 

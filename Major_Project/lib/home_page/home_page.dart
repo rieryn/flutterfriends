@@ -1,6 +1,6 @@
-import 'package:Major_Project/all_posts_tab.dart';
-import 'package:Major_Project/thoughts_tab.dart';
-import 'package:Major_Project/check_ins_tab.dart';
+import 'package:Major_Project/home_page/all_posts_tab.dart';
+import 'package:Major_Project/home_page/posts_tab.dart';
+import 'package:Major_Project/home_page/check_ins_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,8 +42,8 @@ class _HomePageState extends State<HomePage>
                 snap: false,
                 bottom: TabBar(
                   tabs: [
-                    Tab(text: 'All'),
-                    Tab(text: 'Thoughts'),
+                    Tab(text: 'Feed'),
+                    Tab(text: 'Posts'),
                     Tab(text: 'Check-ins'),
                   ],
                 ),
