@@ -2,7 +2,7 @@
 The starter code for the major group project.
 
 Group members (3-5) (no Student IDs, only names):
-1. Group Member1 (github_username1)
+1. Aleem Alibhai (aleemalibhai)
 2. Group Member2 (github_username2)
 3. Group Member3 (github_username3)
 4. Group Member4 (github_username4)
@@ -56,7 +56,7 @@ The first phase of marking, performed by a TA(s) in week 10.  This will evaluate
 #### Functional requirements (7 marks total)
 
 Max Score | Requirement
---------- | ----------- 
+--------- | -----------
 1.50 | Multiple screens/navigation
 1.00 | Dialogs and pickers
 1.00 | Notifications
@@ -67,7 +67,7 @@ Max Score | Requirement
 #### Non-functional requirements (3 marks total)
 
 Max Score | Requirement
---------- | ----------- 
+--------- | -----------
 1.00 | Amount of work done
 1.00 | User interface design/usability
 1.00 | Code and design quality
@@ -79,7 +79,7 @@ The final phase of marking will be carried out exclusively by the instructor.  F
 #### Functional requirements (5 marks total)
 
 Max Score | Requirement
---------- | ----------- 
+--------- | -----------
 0.50 | multiple screens and navigation
 0.25 | dialogs and pickers
 0.50 | snackbars and notifications
@@ -94,7 +94,7 @@ Max Score | Requirement
 #### Non-functional requirements (25 marks total)
 
 Max Score | Requirement
---------- | ----------- 
+--------- | -----------
 5.00 | code and design quality
 5.00 | user interface design and usability
 15.00 | amount of work done
