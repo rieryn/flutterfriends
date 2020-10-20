@@ -3,7 +3,7 @@ The starter code for the major group project.
 
 Group members (3-5) (no Student IDs, only names):
 1. Aleem Alibhai (aleemalibhai)
-2. Group Member2 (github_username2)
+2. Manmeet Choudhary (ManmeetChoudhary)
 3. Group Member3 (github_username3)
 4. Group Member4 (github_username4)
 5. PJ Walton (Dark-Ronald)
