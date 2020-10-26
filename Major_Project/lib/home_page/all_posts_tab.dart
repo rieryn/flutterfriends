@@ -1,4 +1,4 @@
-import 'package:Major_Project/Posts/posts.dart';
+import 'package:major_project/Posts/posts.dart';
 import 'package:flutter/material.dart';
 
 class AllPostsTab extends StatefulWidget {

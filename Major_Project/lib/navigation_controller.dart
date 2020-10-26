@@ -27,9 +27,9 @@ class _NavigationControllerState extends State<NavigationController> {
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'People'),
-          BottomNavigationBarItem(icon: Icon(Icons.map_sharp), label: 'Places'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.people), title: Text('People')),
+          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text('Places')),
         ],
       );
 

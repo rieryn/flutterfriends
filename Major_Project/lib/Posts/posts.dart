@@ -107,7 +107,7 @@ class _PostState extends State<Post> {
             child: Row(
               children: [
                 IconButton(
-                    icon: Icon(Icons.chat_bubble_rounded), onPressed: null),
+                    icon: Icon(Icons.chat_bubble), onPressed: null),
                 Text('${widget.numComments.toString()}')
               ],
             ),

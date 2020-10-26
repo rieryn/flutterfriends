@@ -1,4 +1,4 @@
-# Major_Project
+# major_project
 
 A new Flutter project.
 
