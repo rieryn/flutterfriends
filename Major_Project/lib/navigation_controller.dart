@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_page/home_page.dart';
 import 'places_page/places_page.dart';
 import 'people_page/people_page.dart';
+import 'live chat/live_chat_page.dart';
 
 class NavigationController extends StatefulWidget {
   @override
@@ -17,6 +18,9 @@ class _NavigationControllerState extends State<NavigationController> {
     MapPage(
       key: PageStorageKey('map_page'),
     ),
+    LiveChatPage(
+      key: PageStorageKey('live_chat_page')
+    ),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -30,7 +34,9 @@ class _NavigationControllerState extends State<NavigationController> {
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
           BottomNavigationBarItem(icon: Icon(Icons.people), title: Text('People')),
           BottomNavigationBarItem(icon: Icon(Icons.map), title: Text('Places')),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("Live Chat")),
         ],
+        backgroundColor: Colors.blue,
       );
 
   @override
