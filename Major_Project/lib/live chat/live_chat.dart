@@ -57,29 +57,23 @@ class _OuterRingState extends State<OuterRing> {
   }
 
   Widget build(BuildContext context) {
-    double displayAreaWidth = 300;
-    double displayAreaHeight = 450;
     textBubbles = new TextBubble();
     textBubbles.direction = 0;
-    textBubbles.text = widget.deviceDirection.toString();
-    return SizedBox(
-      width: displayAreaWidth,
-      height: displayAreaHeight,
-      child: Container(
-        color: Colors.lightBlueAccent,
-        child: CustomMultiChildLayout(
-          delegate: OuterRingLayoutDelegate(textBubbles, widget.deviceDirection, displayAreaHeight, displayAreaWidth),
-          children: [
-            LayoutId(
-              id: 1,
-              child: Container(
-                color: Colors.green,
-                child: Text(textBubbles.text),
-                padding: EdgeInsets.all(10.0),
-              )
+    textBubbles.text = "an\nexample\n/\ntest\nlarge\ntext\npost\n" + widget.deviceDirection.toString();
+    return Container(
+      color: Colors.lightBlueAccent,
+      child: CustomMultiChildLayout(
+        delegate: OuterRingLayoutDelegate(textBubbles, widget.deviceDirection),
+        children: [
+          LayoutId(
+            id: 1,
+            child: Container(
+              color: Colors.green,
+              child: Text(textBubbles.text),
+              padding: EdgeInsets.all(10.0),
             )
-          ],
-        )
+          )
+        ],
       )
     );
   }
@@ -93,13 +87,15 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
   double displayAreaWidth;
   double aspectAngle;
 
-  OuterRingLayoutDelegate(this.textBubbles, double deviceDirection, this.displayAreaHeight, this.displayAreaWidth) {
-    aspectAngle = math.atan(displayAreaHeight / displayAreaWidth);
+  OuterRingLayoutDelegate(this.textBubbles, double deviceDirection) {
+
     this.deviceDirection = (deviceDirection / 360) * 2 * math.pi;
   }
 
   void performLayout(Size size) {
-
+    displayAreaWidth = size.width;
+    displayAreaHeight = size.height;
+    aspectAngle = math.atan(displayAreaHeight / displayAreaWidth);
     if (hasChild(1)) {
       Size childSize = layoutChild(
         1,
