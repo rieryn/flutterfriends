@@ -61,7 +61,7 @@ class _OuterRingState extends State<OuterRing> {
     double displayAreaHeight = 450;
     textBubbles = new TextBubble();
     textBubbles.direction = 0;
-    textBubbles.text = "abcdefg";
+    textBubbles.text = widget.deviceDirection.toString();
     return SizedBox(
       width: displayAreaWidth,
       height: displayAreaHeight,
@@ -72,7 +72,11 @@ class _OuterRingState extends State<OuterRing> {
           children: [
             LayoutId(
               id: 1,
-              child: Text(textBubbles.text)
+              child: Container(
+                color: Colors.green,
+                child: Text(textBubbles.text),
+                padding: EdgeInsets.all(10.0),
+              )
             )
           ],
         )
@@ -97,28 +101,28 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
   void performLayout(Size size) {
 
     if (hasChild(1)) {
-      layoutChild(
+      Size childSize = layoutChild(
         1,
-        BoxConstraints.tight(size)
+        BoxConstraints.loose(size)
       );
 
       double x;
       double y;
       if ((deviceDirection >= ((math.pi / 2) - aspectAngle)) && (deviceDirection < ((math.pi / 2) + aspectAngle))) {
         x = 0;
-        y = (displayAreaHeight / 2) - ((displayAreaWidth / 2) * math.tan((math.pi / 2) - deviceDirection));
+        y = (((displayAreaHeight / 2) - ((displayAreaWidth / 2) * math.tan((math.pi / 2) - deviceDirection))) / displayAreaHeight) * (displayAreaHeight - childSize.height);
       }
       else if ((deviceDirection >= ((math.pi / 2) + aspectAngle)) && (deviceDirection < (1.5 * math.pi - aspectAngle))){
-        y = displayAreaHeight - 50;
-        x = (displayAreaWidth / 2) - ((displayAreaHeight / 2) * math.tan(math.pi - deviceDirection));
+        y = displayAreaHeight - childSize.height;
+        x = (((displayAreaWidth / 2) - ((displayAreaHeight / 2) * math.tan(math.pi - deviceDirection))) / displayAreaWidth) * (displayAreaWidth - childSize.width);
       }
       else if ((deviceDirection >= (1.5 * math.pi - aspectAngle)) && (deviceDirection < (1.5 * math.pi + aspectAngle))) {
-        x = displayAreaWidth - 100;
-        y = (displayAreaHeight / 2) + ((displayAreaWidth / 2) * math.tan((1.5 * math.pi) - deviceDirection));
+        x = displayAreaWidth - childSize.width;
+        y = (((displayAreaHeight / 2) + ((displayAreaWidth / 2) * math.tan((1.5 * math.pi) - deviceDirection))) / displayAreaHeight) * (displayAreaHeight - childSize.height);
       }
       else {
         y = 0;
-        x = (displayAreaWidth / 2) - ((displayAreaHeight / 2) * math.tan(deviceDirection));
+        x = (((displayAreaWidth / 2) - ((displayAreaHeight / 2) * math.tan(deviceDirection))) / displayAreaWidth) * (displayAreaWidth - childSize.width);
       }
       /*
       if (deviceDirection < ((math.pi / 2) - aspectAngle)) {
