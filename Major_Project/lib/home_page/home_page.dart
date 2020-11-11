@@ -10,11 +10,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin<HomePage> {
-  @override
-  bool get wantKeepAlive => true;
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -39,7 +35,7 @@ class _HomePageState extends State<HomePage>
                 ],
                 floating: true,
                 pinned: true,
-                snap: false,
+                snap: true,
                 bottom: TabBar(
                   tabs: [
                     Tab(text: 'Feed'),
