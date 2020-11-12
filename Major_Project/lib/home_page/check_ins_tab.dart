@@ -9,13 +9,18 @@ class _CheckInsTabState extends State<CheckInsTab>
     with AutomaticKeepAliveClientMixin<CheckInsTab> {
   @override
   bool get wantKeepAlive => true;
+
+  ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemBuilder: (context, index) {
-      return ListTile(
-        title: Text('Image Post'),
-        subtitle: Text('$index'),
-      );
-    });
+    return ListView.builder(
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('Image Post'),
+            subtitle: Text('$index'),
+          );
+        });
   }
 }
