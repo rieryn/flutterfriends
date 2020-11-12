@@ -26,13 +26,10 @@ dependencies:
   flutter_compass: '^0.4.3'
   geolocator: ^6.1.0
   rxdart: ^0.24.1
-<<<<<<< HEAD
   firebase_core:
   cloud_firestore:
   sqflite:
-=======
   scidart: ^0.0.1-dev.6
->>>>>>> 3726a171f3ef981e1be8bacf9dcd0d33cdaeb97f
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
