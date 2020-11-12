@@ -29,7 +29,12 @@ class _AllPostsTabState extends State<AllPostsTab>
             image: NetworkImage(
               'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
             ),
-            numComments: 100 + index,
+            comments: [
+              'comment1',
+              'comment2',
+              'look another one',
+              'one more time'
+            ],
             numLikes: index,
           );
         });

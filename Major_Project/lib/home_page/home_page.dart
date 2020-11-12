@@ -1,3 +1,4 @@
+import 'package:major_project/Posts/add_post_popup.dart';
 import 'package:major_project/home_page/all_posts_tab.dart';
 import 'package:major_project/home_page/posts_tab.dart';
 import 'package:major_project/home_page/check_ins_tab.dart';
@@ -13,48 +14,56 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                leading: IconButton(
-                  icon: Icon(Icons.camera),
-                  onPressed: null,
-                ),
-                title: Text('Localize'),
-                centerTitle: true,
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.chat_bubble),
+          body: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  leading: IconButton(
+                    icon: Icon(Icons.camera),
                     onPressed: null,
-                  )
-                ],
-                floating: true,
-                pinned: true,
-                snap: true,
-                bottom: TabBar(
-                  tabs: [
-                    Tab(text: 'Feed'),
-                    Tab(text: 'Posts'),
-                    Tab(text: 'Check-ins'),
+                  ),
+                  title: Text('Localize'),
+                  centerTitle: true,
+                  actions: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.chat_bubble),
+                      onPressed: null,
+                    )
                   ],
+                  floating: true,
+                  pinned: true,
+                  snap: true,
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(text: 'Feed'),
+                      Tab(text: 'Posts'),
+                      Tab(text: 'Check-ins'),
+                    ],
+                  ),
                 ),
-              ),
-            ];
-          },
-          body: TabBarView(
-            children: [
-              AllPostsTab(),
-              ThoughtsTab(),
-              CheckInsTab(),
-            ],
+              ];
+            },
+            body: TabBarView(
+              children: [
+                AllPostsTab(),
+                ThoughtsTab(),
+                CheckInsTab(),
+              ],
+            ),
           ),
-        ),
-      ),
+          floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () async {
+                await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddPostPopup();
+                    });
+              })),
     );
   }
 }
