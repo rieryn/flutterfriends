@@ -5,6 +5,6 @@ import 'package:major_project/Posts/post.dart';
 
 class PostModel {
   static Future<void> insertPost(Post post) {
-    FirebaseFirestore.instance.collection('Posts').add(post.toMap());
+    FirebaseFirestore.instance.collection('posts').add(post.toMap());
   }
 }

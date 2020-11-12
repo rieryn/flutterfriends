@@ -1,5 +1,6 @@
 import 'package:major_project/Posts/add_post_popup.dart';
 import 'package:major_project/Posts/post.dart';
+import 'package:major_project/Posts/post_model.dart';
 import 'package:major_project/home_page/all_posts_tab.dart';
 import 'package:major_project/home_page/posts_tab.dart';
 import 'package:major_project/home_page/check_ins_tab.dart';
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
                     builder: (BuildContext context) {
                       return AddPostPopup();
                     });
+                await PostModel.insertPost(post);
                 Scaffold.of(context).showSnackBar(SnackBar(
                   duration: Duration(seconds: 1),
                   content: Row(

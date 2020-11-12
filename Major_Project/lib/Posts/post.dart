@@ -8,7 +8,7 @@ class Post {
   String mainText;
   String image;
   int numLikes;
-  List<String> comments;
+  List<dynamic> comments;
   DocumentReference reference;
   DateTime postedDate;
 
@@ -23,13 +23,13 @@ class Post {
   });
 
   Post.fromMap(Map<String, dynamic> map, {this.reference}) {
-    this.username = map['useername'];
+    this.username = map['username'];
     this.location = map['location'];
     this.mainText = map['mainText'];
     this.image = map['image'];
     this.numLikes = map['numLikes'];
     this.comments = map['comments'];
-    this.postedDate = DateTime.parse(map['postedDate']);
+    this.postedDate = DateTime.parse('2020-11-12 15:09:03.679153');
   }
 
   Map<String, dynamic> toMap() {
@@ -40,7 +40,19 @@ class Post {
       'image': this.image,
       'numLikes': this.numLikes,
       'comments': this.comments,
-      'datePosted': this.postedDate.toString(),
+      'postedDate': this.postedDate.toString(),
     };
+  }
+
+  String toString() {
+    return '''
+    $username
+    $location
+    $mainText
+    $image
+    $numLikes
+    ${comments.length}
+    $postedDate
+    ''';
   }
 }
