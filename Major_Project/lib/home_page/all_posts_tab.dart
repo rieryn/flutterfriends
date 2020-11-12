@@ -30,6 +30,8 @@ class _AllPostsTabState extends State<AllPostsTab>
 
                   return PostWidget(post: post);
                 });
+          } else {
+            return CircularProgressIndicator();
           }
         });
   }

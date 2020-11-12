@@ -63,27 +63,36 @@ class _UserSignInState extends State<UserSignIn> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+        onPressed: () {
           if (_formkey.currentState.validate()) {
             _formkey.currentState.save();
-            await Firebase.initializeApp();
-            await FirebaseFirestore.instance
-                .collection('users')
-                .where('username', isEqualTo: _userName)
-                .get()
-                .then((QuerySnapshot snapshot) => {
-                      snapshot.docs.forEach((doc) {
-                        if (doc["password"] == _password) {
-                          Navigator.pushNamed(context, '/NavigationController');
-                        } else {
-                          print("No Match");
-                        }
-                      })
-                    });
+            _checkPassword(_userName, _password);
           }
         },
         child: Icon(Icons.check),
       ),
     );
+  }
+
+  void _checkPassword(String username, String password) async {
+    print(username);
+    var result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+    // check that user is in db
+    print(result.docs);
+    if (result.docs.length > 0) {
+      if (result.docs.first['password'] == password) {
+        //successful logiin
+        Navigator.pushNamed(context, '/NavigationController');
+      } else {
+        //TODO alert? snackbar?
+        print("Login Failed - Incorrect Password");
+      }
+    } else {
+      //TODO snackbar? alert?
+      print("Login Failed - User Not Found");
+    }
   }
 }
