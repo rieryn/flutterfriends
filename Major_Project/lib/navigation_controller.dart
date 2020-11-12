@@ -18,9 +18,7 @@ class _NavigationControllerState extends State<NavigationController> {
     MapPage(
       key: PageStorageKey('map_page'),
     ),
-    LiveChatPage(
-      key: PageStorageKey('live_chat_page')
-    ),
+    LiveChatPage(key: PageStorageKey('live_chat_page')),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -31,12 +29,27 @@ class _NavigationControllerState extends State<NavigationController> {
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.people), title: Text('People')),
-          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text('Places')),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("Live Chat")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+              backgroundColor: Colors.deepPurple),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'People',
+            backgroundColor: Colors.deepPurple,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Places',
+            backgroundColor: Colors.deepPurple,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Live Chat',
+            backgroundColor: Colors.deepPurple,
+          ),
         ],
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepPurple,
       );
 
   @override
