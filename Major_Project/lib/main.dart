@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
                   '/NavigationController': (BuildContext context) =>
                       NavigationController(),
                 });
+          } else {
+            return CircularProgressIndicator();
           }
         });
   }
