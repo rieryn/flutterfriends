@@ -1,4 +1,5 @@
 import 'package:major_project/Posts/add_post_popup.dart';
+import 'package:major_project/Posts/post.dart';
 import 'package:major_project/home_page/all_posts_tab.dart';
 import 'package:major_project/home_page/posts_tab.dart';
 import 'package:major_project/home_page/check_ins_tab.dart';
@@ -58,11 +59,17 @@ class _HomePageState extends State<HomePage> {
           floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () async {
-                await showDialog(
+                Post post = await showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AddPostPopup();
                     });
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  duration: Duration(seconds: 1),
+                  content: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Text("Posted")]),
+                ));
               })),
     );
   }

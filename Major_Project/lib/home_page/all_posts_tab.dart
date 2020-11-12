@@ -1,4 +1,5 @@
-import 'package:major_project/Posts/posts.dart';
+import 'package:major_project/Posts/post.dart';
+import 'package:major_project/Posts/post_widget.dart';
 import 'package:flutter/material.dart';
 
 class AllPostsTab extends StatefulWidget {
@@ -17,7 +18,8 @@ class _AllPostsTabState extends State<AllPostsTab>
     return ListView.builder(
         controller: _scrollController,
         itemBuilder: (context, index) {
-          return Post(
+          return PostWidget(
+              post: Post(
             username: 'Username$index',
             location: 'Petrinas - 21 Harwood Ave. South',
             mainText:
@@ -26,9 +28,8 @@ class _AllPostsTabState extends State<AllPostsTab>
                 'number of charachters this description should be.\n\nor the post '
                 'should truncate into a shorter version and expanded by tapping on '
                 'the post',
-            image: NetworkImage(
-              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
-            ),
+            image:
+                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
             comments: [
               'comment1',
               'comment2',
@@ -36,7 +37,7 @@ class _AllPostsTabState extends State<AllPostsTab>
               'one more time'
             ],
             numLikes: index,
-          );
+          ));
         });
   }
 }

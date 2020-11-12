@@ -1,54 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:major_project/Posts/post.dart';
 
-class Post extends StatefulWidget {
+class PostWidget extends StatefulWidget {
+  Post post;
+  PostWidget({Key key, this.post}) : super(key: key);
+
   @override
-  _PostState createState() => _PostState();
-  String username;
-  // TODO: use real location
-  String location;
-  String mainText;
-  NetworkImage image;
-  int numLikes;
-  List<String> comments;
-  DocumentReference reference;
-  DateTime postedDate;
-
-  Post({
-    Key key,
-    this.username,
-    this.location,
-    this.mainText,
-    this.image,
-    this.numLikes,
-    this.comments,
-    this.postedDate,
-  }) : super(key: key);
-
-  Post.fromMap(Map<String, dynamic> map, {this.reference}) {
-    this.username = map['useername'];
-    this.location = map['location'];
-    this.mainText = map['mainText'];
-    this.image = map['image'];
-    this.numLikes = map['numLikes'];
-    this.comments = map['comments'];
-    this.postedDate = DateTime.parse(map['postedDate']);
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'username': this.username,
-      'location': this.location,
-      'mainText': this.mainText,
-      'image': this.image,
-      'numLikes': this.numLikes,
-      'comments': this.comments,
-      'datePosted': this.postedDate.toString(),
-    };
-  }
+  _PostWidgetState createState() => _PostWidgetState();
 }
 
-class _PostState extends State<Post> {
+class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -80,14 +42,14 @@ class _PostState extends State<Post> {
             Container(
               padding: EdgeInsets.all(_padding),
               child: CircleAvatar(
-                child:
-                    Text('${widget.username.characters.first.toUpperCase()}'),
+                child: Text(
+                    '${widget.post.username.characters.first.toUpperCase()}'),
               ),
             ),
             // Username
             Container(
                 padding: EdgeInsets.only(top: _padding, bottom: _padding),
-                child: Text('${widget.username}',
+                child: Text('${widget.post.username}',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
             // spacer to right justify location
@@ -95,13 +57,14 @@ class _PostState extends State<Post> {
             // TODO: use interactive location
             Container(
                 padding: EdgeInsets.all(_padding),
-                child: Text('${widget.location}')),
+                child: Text('${widget.post.location}')),
           ]),
         ),
         // text
         Container(
             padding: EdgeInsets.only(left: _padding + 5, right: _padding + 5),
-            child: Text('${widget.mainText}', style: TextStyle(fontSize: 15))),
+            child: Text('${widget.post.mainText}',
+                style: TextStyle(fontSize: 15))),
         Container(
           height: _width,
           width: _width,
@@ -109,7 +72,7 @@ class _PostState extends State<Post> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(_padding),
             child: Image(
-              image: widget.image,
+              image: NetworkImage(widget.post.image),
               fit: BoxFit.fill,
             ),
           ),
@@ -122,7 +85,7 @@ class _PostState extends State<Post> {
             child: Row(
               children: [
                 IconButton(icon: Icon(Icons.favorite), onPressed: null),
-                Text('${widget.numLikes}')
+                Text('${widget.post.numLikes}')
               ],
             ),
           ),
@@ -132,7 +95,7 @@ class _PostState extends State<Post> {
             child: Row(
               children: [
                 IconButton(icon: Icon(Icons.chat_bubble), onPressed: null),
-                Text('${widget.comments.length}')
+                Text('${widget.post.comments.length}')
               ],
             ),
           ),
