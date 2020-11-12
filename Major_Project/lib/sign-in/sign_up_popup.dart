@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:major_project/Posts/post.dart';
+import 'package:major_project/Users/users.dart';
 
-class AddPostPopup extends StatefulWidget {
+class SignUpPopUp extends StatefulWidget {
   @override
-  _AddPostPopupState createState() => _AddPostPopupState();
+  _SignUpPopUpState createState() => _SignUpPopUpState();
 }
 
-class _AddPostPopupState extends State<AddPostPopup> {
-  String _text;
-  String _location;
-  String _image;
-
+class _SignUpPopUpState extends State<SignUpPopUp> {
+  final _formkey = GlobalKey<FormState>();
+  String _username;
+  String _password;
+  DateTime _birthday = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -27,12 +27,9 @@ class _AddPostPopupState extends State<AddPostPopup> {
             Container(
               padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
               child: TextFormField(
-                minLines: 5,
-                maxLines: 10,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  labelText: "Check In",
-                  hintText: 'What are you up to?',
+                  labelText: "Username",
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     borderSide: BorderSide(color: Colors.grey),
@@ -42,18 +39,17 @@ class _AddPostPopupState extends State<AddPostPopup> {
                     borderSide: BorderSide(color: Colors.deepPurple),
                   ),
                 ),
-                onChanged: (String value) {
-                  setState(() {
-                    _text = value;
-                  });
+                onSaved: (String value) {
+                  _username = value;
                 },
               ),
             ),
             Container(
                 padding: EdgeInsets.only(top: 4, left: 8, right: 8, bottom: 4),
                 child: TextFormField(
+                  obscureText: true,
                   decoration: InputDecoration(
-                    labelText: "Location",
+                    labelText: "Password",
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       borderSide: BorderSide(color: Colors.grey),
@@ -63,46 +59,43 @@ class _AddPostPopupState extends State<AddPostPopup> {
                       borderSide: BorderSide(color: Colors.deepPurple),
                     ),
                   ),
-                  onChanged: (String value) {
-                    setState(() {
-                      _location = value;
-                    });
+                  onSaved: (String value) {
+                    _password = value;
                   },
                 )),
             Container(
-                padding: EdgeInsets.only(top: 4, left: 8, right: 8, bottom: 4),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Image",
-                    //TODO: pick image from device
-                    hintText: "URL of image",
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(1.0)),
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                    ),
+                padding:
+                    EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
+                child: Row(children: [
+                  Text('Birthday: ', style: TextStyle(fontSize: 14)),
+                  Text(
+                    '${_birthday.year}/${_birthday.month}/${_birthday.day}',
+                    style: TextStyle(fontSize: 14),
                   ),
-                  onChanged: (String value) {
-                    setState(() {
-                      _image = value;
-                    });
-                  },
-                )),
+                  IconButton(
+                      icon: Icon(Icons.calendar_today_outlined,
+                          color: Theme.of(context).primaryColor),
+                      onPressed: () {
+                        showDatePicker(
+                                context: context,
+                                initialDate: _birthday,
+                                firstDate: DateTime(1900),
+                                lastDate: _birthday)
+                            .then((value) {
+                          setState(() {
+                            _birthday = value;
+                          });
+                        });
+                      })
+                ])),
             Container(
               padding: EdgeInsets.only(top: 4, bottom: 8),
               child: RaisedButton(
-                child: Text('Check In'),
-                onPressed: () => Navigator.of(context).pop(Post(
-                  username: "Username",
-                  location: _location,
-                  mainText: _text,
-                  image: _image,
-                  numLikes: 0,
-                  comments: [],
-                  postedDate: DateTime.now(),
+                child: Text('Sign Up'),
+                onPressed: () => Navigator.of(context).pop(User(
+                  username: _username,
+                  password: _password,
+                  birthday: _birthday,
                 )),
               ),
             ),

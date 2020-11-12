@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:major_project/Users/user_model.dart';
+import 'package:major_project/Users/users.dart';
 import 'package:major_project/navigation_controller.dart';
+import 'package:major_project/sign-in/sign_up_popup.dart';
 
 class UserSignIn extends StatefulWidget {
   @override
@@ -29,7 +32,7 @@ class _UserSignInState extends State<UserSignIn> {
                   children: <Widget>[
                     TextFormField(
                       decoration: const InputDecoration(
-                          labelText: 'UserName:', hintText: 'eg: JohnSmith'),
+                          labelText: 'Username:', hintText: 'eg: JohnSmith'),
                       validator: (String value) {
                         if (value.isEmpty) {
                           return 'You did not enter a User Name!';
@@ -60,6 +63,25 @@ class _UserSignInState extends State<UserSignIn> {
                   ],
                 ),
               )),
+          Container(
+              child: RaisedButton(
+                  child: Text('Sign Up'),
+                  onPressed: () async {
+                    User user = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SignUpPopUp();
+                        });
+                    if (user != null) {
+                      await UserModel.insertUser(user);
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        duration: Duration(seconds: 1),
+                        content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text("Signed Up")]),
+                      ));
+                    }
+                  }))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -75,15 +97,10 @@ class _UserSignInState extends State<UserSignIn> {
   }
 
   void _checkPassword(String username, String password) async {
-    print(username);
-    var result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('username', isEqualTo: username)
-        .get();
+    User target = await UserModel.findUser(username);
     // check that user is in db
-    print(result.docs);
-    if (result.docs.length > 0) {
-      if (result.docs.first['password'] == password) {
+    if (target != null) {
+      if (target.password == password) {
         //successful logiin
         Navigator.pushNamed(context, '/NavigationController');
       } else {

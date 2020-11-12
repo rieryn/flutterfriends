@@ -18,7 +18,9 @@ class User {
   User.fromMap(Map<String, dynamic> map, {this.reference}) {
     this.username = map['username'];
     this.password = map['password'];
-    this.birthday = DateTime.parse(map['birthday']);
+    map['bithday'] == null
+        ? print('no bday')
+        : this.birthday = DateTime.parse(map['birthday']);
   }
   Map<String, dynamic> toMap() {
     return {
