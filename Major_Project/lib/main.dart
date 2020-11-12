@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:major_project/cloud/sign_in.dart';
 import 'package:major_project/navigation_controller.dart';
 
 void main() {
@@ -6,16 +7,20 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  var _colour = Colors.blue;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: NavigationController(),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: _colour,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        // home: NavigationController(),
+        home: UserSignIn(),
+        routes: <String, WidgetBuilder>{
+          '/NavigationController': (BuildContext context) =>
+              NavigationController(),
+        });
   }
 }
