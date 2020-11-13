@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:major_project/localdb/settings_model.dart';
 
 class Settings {
   String type;
@@ -12,7 +13,7 @@ class Settings {
   }
   Map<String, dynamic> toMap() {
     return {
-      'Theme': this.type,
+      'Type': this.type,
       'Color': this.color,
     };
   }
@@ -27,6 +28,7 @@ class PickSetting extends StatefulWidget {
 
 class _PickSetting extends State<PickSetting> {
   final _formkey = GlobalKey<FormState>();
+  final _model = SettingsModel();
 
   String _color = 'Blue';
 
@@ -74,7 +76,8 @@ class _PickSetting extends State<PickSetting> {
               type: 'Theme',
               color: _color,
             );
-            Navigator.of(context).pop(setting);
+            _model.updateSettings(setting);
+            Navigator.of(context).pop();
           }
         },
         tooltip: 'Add',

@@ -32,8 +32,10 @@ class _HomePageState extends State<HomePage> {
                   centerTitle: true,
                   actions: <Widget>[
                     IconButton(
-                      icon: Icon(Icons.chat_bubble),
-                      onPressed: null,
+                      icon: Icon(Icons.settings),
+                      onPressed: () {
+                        _settings();
+                      },
                     )
                   ],
                   floating: true,
@@ -74,5 +76,9 @@ class _HomePageState extends State<HomePage> {
                 ));
               })),
     );
+  }
+
+  Future<void> _settings() async {
+    Navigator.pushNamed(context, '/settings');
   }
 }
