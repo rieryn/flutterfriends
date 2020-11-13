@@ -23,10 +23,13 @@ class _AllPostsTabState extends State<AllPostsTab>
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.documentChanges[0].type ==
-                DocumentChangeType.added) {
-              _notifications.sendNotificationNow("New Post!!", "Check it out!");
-            }
+            snapshot.data.documentChanges.forEach((change) => {
+                  if (change.type == DocumentChangeType.added)
+                    {
+                      _notifications.sendNotificationNow(
+                          "New Post!!", "Check it out!")
+                    }
+                });
             return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 controller: _scrollController,
