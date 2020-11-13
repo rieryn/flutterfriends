@@ -28,28 +28,28 @@ class _NavigationControllerState extends State<NavigationController> {
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-              backgroundColor: Colors.deepPurple),
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: 'People',
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Places',
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Live Chat',
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
-        backgroundColor: Colors.deepPurple,
       );
 
   @override

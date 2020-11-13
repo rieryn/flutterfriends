@@ -76,7 +76,7 @@ class _PickSetting extends State<PickSetting> {
               type: 'Theme',
               color: _color,
             );
-            _model.updateSettings(setting);
+            SettingsModel.updateSettings(setting);
             Navigator.of(context).pop();
           }
         },

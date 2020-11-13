@@ -3,15 +3,13 @@ import 'db.utils.dart';
 import 'settings.dart';
 
 class SettingsModel {
-  Future<void> updateSettings(Settings setting) async {
+  static Future<void> updateSettings(Settings setting) async {
     final db = await DBUtils.init();
-    await db.update('settings', setting.toMap(),
-        where: "Type = ?",
-        whereArgs: [setting.type],
+    await db.insert('settings', setting.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<Settings>> readSettings() async {
+  static Future<Settings> readSettings() async {
     final db = await DBUtils.init();
     final List<Map<String, dynamic>> maps = await db.query('settings');
     List<Settings> results = [];
@@ -20,6 +18,6 @@ class SettingsModel {
         results.add(Settings.fromMap(maps[i]));
       }
     }
-    return results;
+    return results[0];
   }
 }

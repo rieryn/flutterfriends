@@ -9,9 +9,48 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final _model = SettingsModel();
-  var _colour = Colors.blue;
+  var _color;
+
+  @override
+  void initState() {
+    _getSettings().then((value) {
+      setState(() {
+        switch (value.color) {
+          case "Blue":
+            {
+              _color = Colors.blue;
+            }
+            break;
+
+          case "Deep Purple":
+            {
+              _color = Colors.deepPurple;
+            }
+            break;
+
+          case "Amber":
+            {
+              _color = Colors.amber;
+            }
+            break;
+
+          default:
+            {
+              _color = Colors.deepPurple;
+            }
+            break;
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -25,7 +64,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
                 title: 'Flutter Demo',
                 theme: ThemeData(
-                  primarySwatch: _colour,
+                  primarySwatch: _color,
                   visualDensity: VisualDensity.adaptivePlatformDensity,
                 ),
                 // home: NavigationController(),
@@ -41,8 +80,8 @@ class MyApp extends StatelessWidget {
         });
   }
 
-  Future<List<Settings>> _getSettings() async {
-    List<Settings> settings = await _model.readSettings();
+  Future<Settings> _getSettings() async {
+    Settings settings = await SettingsModel.readSettings();
     return settings;
   }
 }
