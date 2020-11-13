@@ -3,8 +3,10 @@ import 'db.utils.dart';
 import 'settings.dart';
 
 class SettingsModel {
+  // update settings
   static Future<void> updateSettings(Settings setting) async {
     final db = await DBUtils.init();
+    // only one setting it will always be over written
     await db.insert('settings', setting.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
