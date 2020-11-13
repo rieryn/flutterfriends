@@ -16,6 +16,12 @@ FORMATIVE ASSESMENT CHECKLIST:
 5) LocalStorage: Settings(Theme Color - Restart to take affect)
 6) Cloud Storage: SignIN/Users and Posts
 
+Default Sign-In:
+username: admin
+password: admin
+
+Although you can create a new user.
+
 Currently, these things are not polished but made to be functional for the assesment, extra functionality for each to be added soon.
 
 
