@@ -17,6 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var _color;
 
+  //initialize local database to load Theme settings to build the app
   @override
   void initState() {
     _getSettings().then((value) {
@@ -53,6 +54,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
+        //future builder to establish connecton to Cloud db
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -61,14 +63,16 @@ class _MyAppState extends State<MyApp> {
           }
           if (snapshot.connectionState == ConnectionState.done) {
             return MaterialApp(
+                //builds app only is connection works
                 title: 'Flutter Demo',
                 theme: ThemeData(
                   primarySwatch: _color,
                   visualDensity: VisualDensity.adaptivePlatformDensity,
                 ),
                 // home: NavigationController(),
-                home: UserSignIn(),
+                home: UserSignIn(), //homepage is user signin
                 routes: <String, WidgetBuilder>{
+                  //named routes
                   '/NavigationController': (BuildContext context) =>
                       NavigationController(),
                   '/settings': (BuildContext context) => PickSetting(),
@@ -80,6 +84,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<Settings> _getSettings() async {
+    //read local database for settings
     Settings settings = await SettingsModel.readSettings();
     return settings;
   }

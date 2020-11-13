@@ -12,6 +12,7 @@ class UserSignIn extends StatefulWidget {
 }
 
 class _UserSignInState extends State<UserSignIn> {
+  //sign in page with a form
   final _formkey = GlobalKey<FormState>();
   String _userName = '';
   String _password = '';
@@ -30,11 +31,13 @@ class _UserSignInState extends State<UserSignIn> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    //two textfields - one for username, one for password
                     TextFormField(
                       decoration: const InputDecoration(
                           labelText: 'Username:', hintText: 'eg: JohnSmith'),
                       validator: (String value) {
                         if (value.isEmpty) {
+                          //validate user textfield
                           return 'You did not enter a User Name!';
                         } else {
                           return null;
@@ -65,9 +68,11 @@ class _UserSignInState extends State<UserSignIn> {
               )),
           Container(
               child: RaisedButton(
+                  //Create new user function
                   child: Text('Sign Up'),
                   onPressed: () async {
                     User user = await showDialog(
+                        //dialog to create new user
                         context: context,
                         builder: (BuildContext context) {
                           return SignUpPopUp();
@@ -85,8 +90,10 @@ class _UserSignInState extends State<UserSignIn> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        // sign in user
         onPressed: () {
           if (_formkey.currentState.validate()) {
+            //validate fields and perform onSaved
             _formkey.currentState.save();
             _checkPassword(_userName, _password);
           }
