@@ -83,8 +83,8 @@ class _MyAppState extends State<MyApp> {
         });
   }
 
+  //read local database for settings
   Future<Settings> _getSettings() async {
-    //read local database for settings
     Settings settings = await SettingsModel.readSettings();
     return settings;
   }
