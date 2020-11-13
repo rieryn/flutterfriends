@@ -11,7 +11,7 @@ Group members (3-5) (no Student IDs, only names):
 FORMATIVE ASSESMENT CHECKLIST:
 1) Multiple Screen/Navigation: LogIN screen to Tab Screen to Setting Screen
 2) Dialog and Pickers: Add User and Add Post (Picker is in Add User)
-3) Notifications: New Post/GPS Signal Lost
+3) Notifications: LogIN/New Post/GPS Signal Lost
 4) SnackBars: New Post
 5) LocalStorage: Settings(Theme Color - Restart to take affect)
 6) Cloud Storage: SignIN/Users and Posts
