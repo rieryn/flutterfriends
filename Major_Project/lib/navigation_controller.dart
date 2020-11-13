@@ -10,6 +10,7 @@ class NavigationController extends StatefulWidget {
 }
 
 class _NavigationControllerState extends State<NavigationController> {
+  // storage keys allow the pages to not be reloaded every set state and retain their scroll position
   final List<Widget> pages = [
     HomePage(
       key: PageStorageKey('home_page'),
@@ -28,22 +29,26 @@ class _NavigationControllerState extends State<NavigationController> {
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
+        //home tabs
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
             backgroundColor: Theme.of(context).primaryColor,
           ),
+          // people tab
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: 'People',
             backgroundColor: Theme.of(context).primaryColor,
           ),
+          // places tab
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Places',
             backgroundColor: Theme.of(context).primaryColor,
           ),
+          // live chat app
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Live Chat',

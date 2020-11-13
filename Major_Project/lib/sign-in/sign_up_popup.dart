@@ -26,6 +26,7 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Username Field
               Container(
                 padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
                 child: TextFormField(
@@ -46,10 +47,12 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                   },
                 ),
               ),
+              // Password field
               Container(
                   padding:
                       EdgeInsets.only(top: 4, left: 8, right: 8, bottom: 4),
                   child: TextFormField(
+                    // no peeky
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: "Password",
@@ -66,6 +69,7 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                       _password = value;
                     },
                   )),
+              // Birthday field
               Container(
                   padding:
                       EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
@@ -79,6 +83,7 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                         icon: Icon(Icons.calendar_today_outlined,
                             color: Theme.of(context).primaryColor),
                         onPressed: () {
+                          // date picker
                           showDatePicker(
                                   context: context,
                                   initialDate: _birthday,
@@ -91,6 +96,8 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                           });
                         })
                   ])),
+              // Sign up button. might need to move this UX is not great
+              // I keep clicking it as if it was submit
               Container(
                 padding: EdgeInsets.only(top: 4, bottom: 8),
                 child: RaisedButton(
@@ -98,6 +105,7 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                     onPressed: () {
                       if (_formkey.currentState.validate()) {
                         _formkey.currentState.save();
+                        // push new user
                         Navigator.of(context).pop(User(
                           username: _username,
                           password: _password,

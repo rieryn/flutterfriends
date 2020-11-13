@@ -20,18 +20,23 @@ class _HomePageState extends State<HomePage> {
       length: 3,
       child: Scaffold(
           body: NestedScrollView(
+            // scroll should collapse app bar
+            // scroll controller not working
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  // open camera
                   leading: IconButton(
                     icon: Icon(Icons.camera),
                     onPressed: null,
                   ),
+                  // dope title
                   title: Text('Localize'),
                   centerTitle: true,
                   actions: <Widget>[
                     IconButton(
+                      // settings menue
                       icon: Icon(Icons.settings),
                       onPressed: () {
                         _settings();
@@ -59,6 +64,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+          // add post button
           floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () async {
@@ -78,6 +84,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // open settings page
   Future<void> _settings() async {
     Navigator.pushNamed(context, '/settings');
   }

@@ -28,7 +28,6 @@ class PickSetting extends StatefulWidget {
 
 class _PickSetting extends State<PickSetting> {
   final _formkey = GlobalKey<FormState>();
-  final _model = SettingsModel();
 
   String _color = 'Blue';
 
@@ -46,6 +45,7 @@ class _PickSetting extends State<PickSetting> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    // dropdown to select colour for theme
                     DropdownButtonFormField(
                       decoration: const InputDecoration(labelText: 'Theme'),
                       value: _color,

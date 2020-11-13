@@ -15,6 +15,7 @@ class _PostWidgetState extends State<PostWidget> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _padding = 10;
+    // overlap posts a bit
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

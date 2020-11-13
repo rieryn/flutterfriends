@@ -20,13 +20,16 @@ class _AddPostPopupState extends State<AddPostPopup> {
       elevation: 20,
       backgroundColor: Theme.of(context).dialogBackgroundColor,
       child: Container(
+        // 80% width of screen
         width: MediaQuery.of(context).size.width * 0.8,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // box for post text
             Container(
               padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
               child: TextFormField(
+                // bigger to indicate more text is allowed
                 minLines: 5,
                 maxLines: 10,
                 autocorrect: false,
@@ -37,6 +40,8 @@ class _AddPostPopupState extends State<AddPostPopup> {
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     borderSide: BorderSide(color: Colors.grey),
                   ),
+                  // border animates when in focus
+                  // looks good!
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(1.0)),
                     borderSide: BorderSide(color: Colors.deepPurple),
