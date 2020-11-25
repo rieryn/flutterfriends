@@ -8,6 +8,23 @@ Group members (3-5) (no Student IDs, only names):
 4. Group Member4 (github_username4)
 5. PJ Walton (Dark-Ronald)
 
+FORMATIVE ASSESMENT CHECKLIST:
+1) Multiple Screen/Navigation: LogIN screen to Tab Screen to Setting Screen
+2) Dialog and Pickers: Add User and Add Post (Picker is in Add User)
+3) Notifications: LogIN/New Post/GPS Signal Lost
+4) SnackBars: New Post
+5) LocalStorage: Settings(Theme Color - Restart to take affect)
+6) Cloud Storage: SignIN/Users and Posts
+
+Default Sign-In:
+username: admin
+password: admin
+
+Although you can create a new user.
+
+Currently, these things are not polished but made to be functional for the assesment, extra functionality for each to be added soon.
+
+
 ## Overview
 This group project is designed for you to demonstrate the skills that you have learned in this course.  The final project that you submit in the last week of classes will be a completed mobile application.  Non-functional requirements, especially those associated with production-readiness, will be considered extremely important when marking this project.  You are expected to work in a group of three to five students when completing this project.  Students are not permitted to work alone on the project, as this eliminates one of the learning objectives of this assessment.  
 

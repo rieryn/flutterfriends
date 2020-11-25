@@ -10,6 +10,7 @@ class NavigationController extends StatefulWidget {
 }
 
 class _NavigationControllerState extends State<NavigationController> {
+  // storage keys allow the pages to not be reloaded every set state and retain their scroll position
   final List<Widget> pages = [
     HomePage(
       key: PageStorageKey('home_page'),
@@ -18,9 +19,7 @@ class _NavigationControllerState extends State<NavigationController> {
     MapPage(
       key: PageStorageKey('map_page'),
     ),
-    LiveChatPage(
-      key: PageStorageKey('live_chat_page')
-    ),
+    LiveChatPage(key: PageStorageKey('live_chat_page')),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -30,17 +29,37 @@ class _NavigationControllerState extends State<NavigationController> {
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.people), title: Text('People')),
-          BottomNavigationBarItem(icon: Icon(Icons.map), title: Text('Places')),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("Live Chat")),
+        //home tabs
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          // people tab
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            title: Text('People'),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          // places tab
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            title: Text('Places'),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          // live chat app
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            title: Text('Live Chat'),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
         ],
-        backgroundColor: Colors.blue,
       );
 
   @override
   Widget build(BuildContext context) {
+    print(DateTime.now().toString());
     return Scaffold(
       bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
       body: PageStorage(

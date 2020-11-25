@@ -14,6 +14,7 @@ class _CheckInsTabState extends State<CheckInsTab>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView.builder(
         controller: _scrollController,
         itemBuilder: (context, index) {
