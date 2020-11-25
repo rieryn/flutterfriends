@@ -108,8 +108,8 @@ class _UserSignInState extends State<UserSignIn> {
     // check that user is in db
     if (target != null) {
       if (target.password == password) {
-        //successful logiin
-        Navigator.pushNamed(context, '/NavigationController');
+        //successful login
+        Navigator.pop(context);
       } else {
         //TODO alert? snackbar?
         print("Login Failed - Incorrect Password");

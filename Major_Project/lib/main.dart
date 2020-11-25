@@ -70,11 +70,11 @@ class _MyAppState extends State<MyApp> {
                   visualDensity: VisualDensity.adaptivePlatformDensity,
                 ),
                 // home: NavigationController(),
-                home: UserSignIn(), //homepage is user signin
+                home: NavigationController(),
                 routes: <String, WidgetBuilder>{
                   //named routes
-                  '/NavigationController': (BuildContext context) =>
-                      NavigationController(),
+                  '/UserSignIn': (BuildContext context) =>
+                      UserSignIn(),
                   '/settings': (BuildContext context) => PickSetting(),
                 });
           } else {
