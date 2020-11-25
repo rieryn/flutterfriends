@@ -85,6 +85,7 @@ class _OuterRingState extends State<OuterRing> {
     textBubbles.add(new TextBubble("north", Position(latitude: widget.location.latitude + 1, longitude: widget.location.longitude)));
     textBubbles.add(new TextBubble("northEast", Position(latitude: widget.location.latitude + 1, longitude: widget.location.longitude + 0.0001)));
     textBubbles.add(new TextBubble("further northEast", Position(latitude: widget.location.latitude + 1, longitude: widget.location.longitude + 0.0002)));
+    //textBubbles.add(new TextBubble("even\nfurther northEast", Position(latitude: widget.location.latitude + 1, longitude: widget.location.longitude + 0.0003)));
     textBubbles.add(new TextBubble("east", Position(latitude: widget.location.latitude, longitude: widget.location.longitude + 1)));
     textBubbles.add(new TextBubble("south", Position(latitude: widget.location.latitude - 1, longitude: widget.location.longitude)));
     textBubbles.add(new TextBubble("west", Position(latitude: widget.location.latitude, longitude: widget.location.longitude - 1)));
@@ -207,81 +208,13 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
           }
           DisplayLocation groupLocation = getDisplayLocation(averageAngle, 0, 0);
 
-          Array2d A = Array2d(new List<Array>(2 * overlapping.length));
-          for (int i = 0; i < (2 * overlapping.length); i++) {
-            A[i] = new Array(new List<double>(2 * overlapping.length));
-            for (int j = 0; j < (2 * overlapping.length); j++) {
-              A[i][j] = 0;
-            }
-          }
-
-          for (int i = 0; i < overlapping.length; i++) {
-            A[0][i + overlapping.length] = 1;
-          }
-
-          for (int i = 0; i < overlapping.length; i++) {
-            A[1 + i][i] = 1;
-            A[1 + i][i + overlapping.length] = -1;
-          }
-
-          for (int i = 0; i < overlapping.length - 1; i++) {
-            A[overlapping.length + 1 + i][overlapping.length - 1] = 1;
-            A[overlapping.length + 1 + i][i] = -1;
-          }
-
-          Array2d b = Array2d(new List<Array>(2 * overlapping.length));
-          for (int i = 0; i < (2 * overlapping.length); i++) {
-            b[i] = new Array(new List<double>(1));
-            b[i][0] = 0;
-          }
-
-          for (int i = 0; i < overlapping.length; i++) {
-            if ((groupLocation.side == 1) || (groupLocation.side == 3)) {
-              b[1 + i][0] = groupLocation.dLocation.dy;
-            }
-            else {
-              b[1 + i][0] = groupLocation.dLocation.dx;
-            }
-          }
-
-          for (int i = 0; i < overlapping.length - 1; i++) {
-            if (groupLocation.side == 1) {
-              b[overlapping.length + 1 + i][0] =
-                  overlapping[overlapping.length - 1].displaySize.height / 2 + childSpacing;
-              for (int j = 0; j < overlapping.length - 2 - i; j++) {
-                b[overlapping.length + 1 + i][0] += overlapping[1 + j].displaySize.height + childSpacing;
-              }
-              b[overlapping.length + 1 + i][0] += overlapping[i].displaySize.height / 2;
-            }
-            else if (groupLocation.side == 3) {
-              b[overlapping.length + 1 + i][0] =
-                  overlapping[0].displaySize.height / 2 + childSpacing;
-              for (int j = 0; j < overlapping.length - 2 - i; j++) {
-                b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 2 - j].displaySize.height + childSpacing;
-              }
-              b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 1 - i].displaySize.height / 2;
-            }
-            else if (groupLocation.side == 2) {
-              b[overlapping.length + 1 + i][0] =
-                  overlapping[overlapping.length - 1].displaySize.width / 2 + childSpacing;
-              for (int j = 0; j < overlapping.length - 2 - i; j++) {
-                b[overlapping.length + 1 + i][0] += overlapping[1 + j].displaySize.width + childSpacing;
-              }
-              b[overlapping.length + 1 + i][0] += overlapping[i].displaySize.width / 2;
-            }
-            else {
-              b[overlapping.length + 1 + i][0] =
-                  overlapping[0].displaySize.width / 2 + childSpacing;
-              for (int j = 0; j < overlapping.length - 2 - i; j++) {
-                b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 2 - j].displaySize.width + childSpacing;
-              }
-              b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 1 - i].displaySize.width / 2;
-            }
-          }
-
-          Array2d calcPos = matrixSolve(A, b);
+          Array2d calcPos = calcPositions(groupLocation, overlapping);
           int underflowStart = -1;
           int overflowStart = -1;
+
+          /*
+          with clutter restrictions assume that it is impossible to have both underflow and overflow
+           */
 
           if (groupLocation.side == 1) {
             for (int i = 0; i < overlapping.length; i++) {
@@ -324,15 +257,223 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
             }
           }
 
-          {
-            int start = 0;
-            int end = overlapping.length;
+          if ((underflowStart != -1) || (overflowStart != -1)) {
+            /*
+            Track length is the screen distance that the groupLocation must cover over a corner from the starting point
+            of no overflow to the ending point of no underflow
+
+            0: total length
+            1: clockwise side length
+            2: counter-clockwise side length
+             */
+            List<double> groupTrackLength = new List<double>(3);
+            groupTrackLength[0] = 0;
+            groupTrackLength[1] = 0;
+            groupTrackLength[2] = 0;
+
+            //calculate group track length along corner
             if (underflowStart != -1) {
-              start = underflowStart + 1;
+              if (groupLocation.side == 1) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 2), overlapping);
+                groupTrackLength[1] = groupOthersidePositions[overlapping.length - 1][0] + overlapping[overlapping.length - 1].displaySize.width / 2;
+                groupTrackLength[2] = groupLocation.dLocation.dy - calcPos[0][0] + overlapping[0].displaySize.height / 2;
+              }
+              else if (groupLocation.side == 2) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 1), overlapping);
+                groupTrackLength[1] = groupOthersidePositions[overlapping.length - 1][0] + overlapping[overlapping.length - 1].displaySize.height / 2;
+                groupTrackLength[2] = groupLocation.dLocation.dx - calcPos[0][0] + overlapping[0].displaySize.width / 2;
+              }
+              else if (groupLocation.side == 3) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 2), overlapping);
+                groupTrackLength[1] = groupOthersidePositions[overlapping.length - 1][0] + overlapping[overlapping.length - 1].displaySize.width / 2;
+                groupTrackLength[2] = calcPos[overlapping.length - 1][0] - groupLocation.dLocation.dy + overlapping[overlapping.length - 1].displaySize.height / 2;
+              }
+              else if (groupLocation.side == 4) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 1), overlapping);
+                groupTrackLength[1] = groupOthersidePositions[overlapping.length - 1][0] + overlapping[overlapping.length - 1].displaySize.height / 2;
+                groupTrackLength[2] = calcPos[overlapping.length - 1][0] - groupLocation.dLocation.dx + overlapping[0].displaySize.width / 2;
+              }
+              groupTrackLength[0] = groupTrackLength[1] + groupTrackLength[2];
             }
             if (overflowStart != -1) {
-              end = overflowStart;
+              if (groupLocation.side == 1) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 2), overlapping);
+                groupTrackLength[2] = - groupOthersidePositions[0][0] + overlapping[0].displaySize.width / 2;
+                groupTrackLength[1] = calcPos[overlapping.length - 1][0] + overlapping[overlapping.length - 1].displaySize.height / 2 - groupLocation.dLocation.dy;
+              }
+              else if (groupLocation.side == 2) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 1), overlapping);
+                groupTrackLength[2] = - groupOthersidePositions[0][0] + overlapping[0].displaySize.height / 2;
+                groupTrackLength[1] = calcPos[overlapping.length - 1][0] + overlapping[overlapping.length - 1].displaySize.width / 2 - groupLocation.dLocation.dx;
+              }
+              else if (groupLocation.side == 3) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 2), overlapping);
+                groupTrackLength[2] = - groupOthersidePositions[0][0] + overlapping[0].displaySize.width / 2;
+                groupTrackLength[1] = groupLocation.dLocation.dy - calcPos[0][0] + overlapping[0].displaySize.height / 2;
+              }
+              else if (groupLocation.side == 4) {
+                Array2d groupOthersidePositions = calcPositions(DisplayLocation(Offset(0, 0), 1), overlapping);
+                groupTrackLength[2] = - groupOthersidePositions[0][0] + overlapping[0].displaySize.height / 2;
+                groupTrackLength[1] = groupLocation.dLocation.dx - calcPos[0][0] + overlapping[overlapping.length - 1].displaySize.width / 2;
+              }
+              groupTrackLength[0] = groupTrackLength[1] + groupTrackLength[2];
             }
+
+            //get the movements that need to occur
+            List<double> movements = new List<double>(2 * overlapping.length - 2);
+            double movementsSum = 0;
+
+            if ((((groupLocation.side == 1) && (overflowStart != -1)) || ((groupLocation.side == 2) && (underflowStart != -1))) || (((groupLocation.side == 3) && (overflowStart != -1)) || ((groupLocation.side == 4) && (underflowStart != -1)))) { //bottom left corner || top right corner
+              for (int i = 0; (2 * i) < movements.length; i++) {
+                movements[2 * i] = overlapping[overlapping.length - 2 - i].displaySize.width + childSpacing;
+                movementsSum += movements[2 * i];
+              }
+              for (int i = 0; (2 * i) + 1 < movements.length; i++) {
+                movements[(2 * i) + 1] = overlapping[overlapping.length - 1 - i].displaySize.height + childSpacing;
+                movementsSum += movements[(2 * i) + 1];
+              }
+            }
+            else if ((((groupLocation.side == 2) && (overflowStart != -1)) || ((groupLocation.side == 3) && (underflowStart != -1))) || (((groupLocation.side == 4) && (overflowStart != -1)) || ((groupLocation.side == 1) && (underflowStart != -1)))) { //bottom right corner || top left corner
+              for (int i = 0; (2 * i) < movements.length; i++) {
+                movements[2 * i] = overlapping[overlapping.length - 2 - i].displaySize.height + childSpacing;
+                movementsSum += movements[2 * i];
+              }
+              for (int i = 0; (2 * i) + 1 < movements.length; i++) {
+                movements[(2 * i) + 1] = overlapping[overlapping.length - 1 - i].displaySize.width + childSpacing;
+                movementsSum += movements[(2 * i) + 1];
+              }
+            }
+
+            /*
+            proportionally divide the [movements that need to occur] over the group track length
+            groupTrack: [[length of segment, accumulated previous segment lengths], ...]
+             */
+            List<List<double>> groupTrack = new List<List<double>>(2 * overlapping.length - 2);
+            for (int i = 0; i < groupTrack.length; i++) {
+              groupTrack[i] = new List<double>(2);
+              groupTrack[i][0] = (movements[i] / movementsSum) * groupTrackLength[0];
+              if (i == 0) {
+                groupTrack[i][1] = 0;
+              }
+              else {
+                groupTrack[i][1] = groupTrack[i - 1][0] + groupTrack[i - 1][1];
+              }
+            }
+
+            //get how far through track group is
+            double placeInTrack = 0;
+
+            if ((groupLocation.side == 1) && (overflowStart != -1)) {
+              placeInTrack = groupLocation.dLocation.dy - (displayAreaHeight - groupTrackLength[1]);
+            }
+            else if ((groupLocation.side == 2) && (underflowStart != -1)) {
+              placeInTrack = groupLocation.dLocation.dx + groupTrackLength[1];
+            }
+            else if ((groupLocation.side == 2) && (overflowStart != -1)) {
+              placeInTrack = groupLocation.dLocation.dx - (displayAreaWidth - groupTrackLength[1]);
+            }
+            else if ((groupLocation.side == 3) && (underflowStart != -1)) {
+              placeInTrack = displayAreaHeight - groupLocation.dLocation.dy + groupTrackLength[1];
+            }
+            else if ((groupLocation.side == 3) && (overflowStart != -1)) {
+              placeInTrack = groupTrackLength[1] - groupLocation.dLocation.dy;
+            }
+            else if ((groupLocation.side == 4) && (underflowStart != -1)) {
+              placeInTrack = displayAreaWidth - groupLocation.dLocation.dx + groupTrackLength[1];
+            }
+            else if ((groupLocation.side == 4) && (overflowStart != -1)) {
+              placeInTrack = groupTrackLength[1] - groupLocation.dLocation.dx;
+            }
+            else if ((groupLocation.side == 1) && (underflowStart != -1)) {
+              placeInTrack = groupLocation.dLocation.dy + groupTrackLength[1];
+            }
+
+            //find which segment of track group is currently on
+            int segmentOfTrack = 0;
+
+            for (int i = 0; i < groupTrack.length; i++) {
+              if (placeInTrack < groupTrack[i][1] + groupTrack[i][0]) {
+                segmentOfTrack = i;
+                break;
+              }
+            }
+
+            //get textBubble that corresponds to track segment | used as starting point / base of positioning
+            int baseChild = overlapping.length - 1 - ((segmentOfTrack + 1) / 2).floor();
+
+            //position textBubbles
+            if (((groupLocation.side == 1) && (overflowStart != -1)) || ((groupLocation.side == 2) && (underflowStart != -1))) { //bottom left corner
+              //position base textBubble
+              if (segmentOfTrack.isEven) {
+                overlapping[baseChild].bufferPosition = Offset(((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild - 1].displaySize.width + childSpacing), displayAreaHeight - overlapping[baseChild].displaySize.height);
+              }
+              else {
+                overlapping[baseChild].bufferPosition = Offset(0, displayAreaHeight - overlapping[baseChild].displaySize.height - childSpacing - overlapping[baseChild + 1].displaySize.height + ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild + 1].displaySize.height + childSpacing));
+              }
+
+              //position all following textBubbles
+              for (int i = baseChild + 1; i < overlapping.length; i++) {
+                overlapping[i].bufferPosition = Offset(overlapping[i - 1].bufferPosition.dx + overlapping[i - 1].displaySize.width + childSpacing, displayAreaHeight - overlapping[i].displaySize.height);
+              }
+
+              //position all preceding textBubbles
+              for (int i = baseChild - 1; i >= 0; i--) {
+                overlapping[i].bufferPosition = Offset(0, overlapping[i + 1].bufferPosition.dy - overlapping[i].displaySize.height - childSpacing);
+              }
+            }
+            else if (((groupLocation.side == 2) && (overflowStart != -1)) || ((groupLocation.side == 3) && (underflowStart != -1))) { //bottom right corner
+              if (segmentOfTrack.isEven) {
+                overlapping[baseChild].bufferPosition = Offset(displayAreaWidth - overlapping[baseChild].displaySize.width, displayAreaHeight - overlapping[baseChild].displaySize.height - ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild - 1].displaySize.height + childSpacing));
+              }
+              else {
+                overlapping[baseChild].bufferPosition = Offset(displayAreaWidth - overlapping[baseChild].displaySize.width - childSpacing - overlapping[baseChild + 1].displaySize.width + ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild + 1].displaySize.width + childSpacing), displayAreaHeight - overlapping[baseChild].displaySize.height);
+              }
+
+              for (int i = baseChild + 1; i < overlapping.length; i++) {
+                overlapping[i].bufferPosition = Offset(displayAreaWidth - overlapping[i].displaySize.width, overlapping[i - 1].bufferPosition.dy - overlapping[i].displaySize.height - childSpacing);
+              }
+
+              for (int i = baseChild - 1; i >= 0; i--) {
+                overlapping[i].bufferPosition = Offset(overlapping[i + 1].bufferPosition.dx - overlapping[i].displaySize.width - childSpacing, displayAreaHeight - overlapping[i].displaySize.height);
+              }
+            }
+            else if (((groupLocation.side == 3) && (overflowStart != -1)) || ((groupLocation.side == 4) && (underflowStart != -1))) { //top right corner
+              if (segmentOfTrack.isEven) {
+                overlapping[baseChild].bufferPosition = Offset(displayAreaWidth - overlapping[baseChild].displaySize.width - ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild - 1].displaySize.width + childSpacing), 0);
+              }
+              else {
+                overlapping[baseChild].bufferPosition = Offset(displayAreaWidth - overlapping[baseChild].displaySize.width, overlapping[baseChild + 1].displaySize.height + childSpacing - ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild + 1].displaySize.height + childSpacing));
+              }
+
+              for (int i = baseChild + 1; i < overlapping.length; i++) {
+                overlapping[i].bufferPosition = Offset(overlapping[i - 1].bufferPosition.dx - overlapping[i].displaySize.width - childSpacing, 0);
+              }
+
+              for (int i = baseChild - 1; i >= 0; i--) {
+                overlapping[i].bufferPosition = Offset(displayAreaWidth - overlapping[i].displaySize.width, overlapping[i + 1].bufferPosition.dy + overlapping[i].displaySize.height + childSpacing);
+              }
+            }
+            else if (((groupLocation.side == 4) && (overflowStart != -1)) || ((groupLocation.side == 1) && (underflowStart != -1))) { //top left corner
+              if (segmentOfTrack.isEven) {
+                overlapping[baseChild].bufferPosition = Offset(0, ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild - 1].displaySize.height + childSpacing));
+              }
+              else {
+                overlapping[baseChild].bufferPosition = Offset(overlapping[baseChild + 1].displaySize.width + childSpacing - ((placeInTrack - groupTrack[segmentOfTrack][1]) / groupTrack[segmentOfTrack][0]) * (overlapping[baseChild + 1].displaySize.width + childSpacing), 0);
+              }
+
+              for (int i = baseChild + 1; i < overlapping.length; i++) {
+                overlapping[i].bufferPosition = Offset(0, overlapping[i - 1].bufferPosition.dy + overlapping[i - 1].displaySize.height + childSpacing);
+              }
+
+              for (int i = baseChild - 1; i >= 0; i--) {
+                overlapping[i].bufferPosition = Offset(overlapping[i + 1].bufferPosition.dx + overlapping[i + 1].displaySize.width + childSpacing, 0);
+              }
+            }
+          }
+          else { //place same side textBubbles
+            int start = 0;
+            int end = overlapping.length;
+
             if (groupLocation.side == 1) {
               for (int i = start; i < end; i++) {
                 overlapping[i].bufferPosition = Offset(0, calcPos[i][0] - (overlapping[i].displaySize.height / 2));
@@ -351,92 +492,6 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
             else {
               for (int i = start; i < end; i++) {
                 overlapping[i].bufferPosition = Offset(calcPos[overlapping.length - 1 - i][0] - (overlapping[i].displaySize.width / 2), 0);
-              }
-            }
-          }
-
-          //place underflow on previous side
-          if (underflowStart != -1) {
-            if (groupLocation.side == 1) {
-              for (int i = underflowStart; i >= 0; i--) {
-                if (i == overlapping.length - 1) {
-                  overlapping[i].bufferPosition = Offset(0, 0);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(overlapping[i + 1].bufferPosition.dx + overlapping[i + 1].displaySize.width + childSpacing, 0);
-                }
-              }
-            }
-            else if (groupLocation.side == 2) {
-              for (int i = underflowStart; i >= 0; i--) {
-                if (i == overlapping.length - 1) {
-                  overlapping[i].bufferPosition = Offset(0, displayAreaHeight - overlapping[i].displaySize.height);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(0, overlapping[i + 1].bufferPosition.dy - overlapping[i].displaySize.height - childSpacing);
-                }
-              }
-            }
-            else if (groupLocation.side == 3) {
-              for (int i = underflowStart; i >= 0; i--) {
-                if (i == overlapping.length - 1) {
-                  overlapping[i].bufferPosition = Offset(displayAreaWidth - overlapping[i].displaySize.width, displayAreaHeight - overlapping[i].displaySize.height);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(overlapping[i + 1].bufferPosition.dx - overlapping[i].displaySize.width - childSpacing, displayAreaHeight - overlapping[i].displaySize.height);
-                }
-              }
-            }
-            else {
-              for (int i = underflowStart; i >= 0; i--) {
-                if (i == overlapping.length - 1) {
-                  overlapping[i].bufferPosition = Offset(displayAreaWidth - overlapping[i].displaySize.width, 0);
-                }
-                overlapping[i].bufferPosition = Offset(displayAreaWidth - overlapping[i].displaySize.width, overlapping[i + 1].bufferPosition.dy + overlapping[i + 1].displaySize.height + childSpacing);
-              }
-            }
-          }
-
-          //place overflow on next side
-          if (overflowStart != -1) {
-            if (groupLocation.side == 1) {
-              for (int i = overflowStart; i < overlapping.length; i++) {
-                if (i == 0) {
-                  overlapping[0].bufferPosition = Offset(0, displayAreaHeight - overlapping[0].displaySize.height);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(overlapping[i - 1].bufferPosition.dx + overlapping[i - 1].displaySize.width + childSpacing, displayAreaHeight - overlapping[i].displaySize.height);
-                }
-              }
-            }
-            else if (groupLocation.side == 2) {
-              for (int i = overflowStart; i < overlapping.length; i++) {
-                if (i == 0) {
-                  overlapping[0].bufferPosition = Offset(displayAreaWidth - overlapping[0].displaySize.width, displayAreaHeight - overlapping[0].displaySize.height);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(displayAreaWidth - overlapping[i].displaySize.width, overlapping[i - 1].bufferPosition.dy - overlapping[i].displaySize.height - childSpacing);
-                }
-              }
-            }
-            else if (groupLocation.side == 3) {
-              for (int i = overflowStart; i < overlapping.length; i++) {
-                if (i == 0) {
-                  overlapping[0].bufferPosition = Offset(displayAreaWidth - overlapping[0].displaySize.width, 0);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(overlapping[i - 1].bufferPosition.dx - overlapping[i].displaySize.width - childSpacing, 0);
-                }
-              }
-            }
-            else {
-              for (int i = overflowStart; i < overlapping.length; i++) {
-                if (i == 0) {
-                  overlapping[0].bufferPosition = Offset(0, 0);
-                }
-                else {
-                  overlapping[i].bufferPosition = Offset(0, overlapping[i - 1].bufferPosition.dy + overlapping[i - 1].displaySize.height + childSpacing);
-                }
               }
             }
           }
@@ -486,6 +541,7 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
       }
     }
     for (int i = 0; i < textBubbles.length; i++) {
+      cFGrid.remove(textBubbles[i]);
       textBubbles[i].displayPosition = textBubbles[i].bufferPosition;
       positionChild(i, textBubbles[i].displayPosition);
     }
@@ -533,6 +589,82 @@ class OuterRingLayoutDelegate extends MultiChildLayoutDelegate {
     }
 
     return DisplayLocation(Offset(x, y), side);
+  }
+
+  Array2d calcPositions(DisplayLocation groupLocation, List<TextBubble> overlapping) {
+    Array2d A = Array2d(new List<Array>(2 * overlapping.length));
+    for (int i = 0; i < (2 * overlapping.length); i++) {
+      A[i] = new Array(new List<double>(2 * overlapping.length));
+      for (int j = 0; j < (2 * overlapping.length); j++) {
+        A[i][j] = 0;
+      }
+    }
+
+    for (int i = 0; i < overlapping.length; i++) {
+      A[0][i + overlapping.length] = 1;
+    }
+
+    for (int i = 0; i < overlapping.length; i++) {
+      A[1 + i][i] = 1;
+      A[1 + i][i + overlapping.length] = -1;
+    }
+
+    for (int i = 0; i < overlapping.length - 1; i++) {
+      A[overlapping.length + 1 + i][overlapping.length - 1] = 1;
+      A[overlapping.length + 1 + i][i] = -1;
+    }
+
+    Array2d b = Array2d(new List<Array>(2 * overlapping.length));
+    for (int i = 0; i < (2 * overlapping.length); i++) {
+      b[i] = new Array(new List<double>(1));
+      b[i][0] = 0;
+    }
+
+    for (int i = 0; i < overlapping.length; i++) {
+      if ((groupLocation.side == 1) || (groupLocation.side == 3)) {
+        b[1 + i][0] = groupLocation.dLocation.dy;
+      }
+      else {
+        b[1 + i][0] = groupLocation.dLocation.dx;
+      }
+    }
+
+    for (int i = 0; i < overlapping.length - 1; i++) {
+      if (groupLocation.side == 1) {
+        b[overlapping.length + 1 + i][0] =
+            overlapping[overlapping.length - 1].displaySize.height / 2 + childSpacing;
+        for (int j = 0; j < overlapping.length - 2 - i; j++) {
+          b[overlapping.length + 1 + i][0] += overlapping[1 + j].displaySize.height + childSpacing;
+        }
+        b[overlapping.length + 1 + i][0] += overlapping[i].displaySize.height / 2;
+      }
+      else if (groupLocation.side == 3) {
+        b[overlapping.length + 1 + i][0] =
+            overlapping[0].displaySize.height / 2 + childSpacing;
+        for (int j = 0; j < overlapping.length - 2 - i; j++) {
+          b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 2 - j].displaySize.height + childSpacing;
+        }
+        b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 1 - i].displaySize.height / 2;
+      }
+      else if (groupLocation.side == 2) {
+        b[overlapping.length + 1 + i][0] =
+            overlapping[overlapping.length - 1].displaySize.width / 2 + childSpacing;
+        for (int j = 0; j < overlapping.length - 2 - i; j++) {
+          b[overlapping.length + 1 + i][0] += overlapping[1 + j].displaySize.width + childSpacing;
+        }
+        b[overlapping.length + 1 + i][0] += overlapping[i].displaySize.width / 2;
+      }
+      else {
+        b[overlapping.length + 1 + i][0] =
+            overlapping[0].displaySize.width / 2 + childSpacing;
+        for (int j = 0; j < overlapping.length - 2 - i; j++) {
+          b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 2 - j].displaySize.width + childSpacing;
+        }
+        b[overlapping.length + 1 + i][0] += overlapping[overlapping.length - 1 - i].displaySize.width / 2;
+      }
+    }
+
+    return matrixSolve(A, b);
   }
 }
 
