@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:major_project/localdb/settings.dart';
-import 'package:major_project/localdb/settings_model.dart';
-import 'package:major_project/sign-in/sign_in.dart';
-import 'package:major_project/navigation_controller.dart';
+import 'package:major_project/services/firebase_services.dart';
+import 'package:major_project/services/localdb/settings.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/pages/sign_in.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/navigation_controller.dart';
+import 'package:major_project/services/localdb/settings_model.dart';
+import 'package:provider/provider.dart';
+
+import 'models/post_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +25,8 @@ class _MyAppState extends State<MyApp> {
   //initialize local database to load Theme settings to build the app
   @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
+
     _getSettings().then((value) {
       setState(() {
         switch (value.color) {
@@ -53,6 +60,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder(
         //future builder to establish connecton to Cloud db
         future: Firebase.initializeApp(),
@@ -62,7 +70,16 @@ class _MyAppState extends State<MyApp> {
             return Text('Error initializing DB');
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return MaterialApp(
+            final db = FirebaseService();
+            return MultiProvider(
+                providers: [
+                  //todo:decide where to put these later
+                  //auth provider
+                  StreamProvider<User>.value(value: FirebaseAuth.instance.authStateChanges()),
+                  //posts provider
+                  StreamProvider<List<Post>>.value(value: db.streamPosts()),
+                ],
+                child: MaterialApp(
                 //builds app only is connection works
                 title: 'Flutter Demo',
                 theme: ThemeData(
@@ -76,7 +93,8 @@ class _MyAppState extends State<MyApp> {
                   '/NavigationController': (BuildContext context) =>
                       NavigationController(),
                   '/settings': (BuildContext context) => PickSetting(),
-                });
+                })
+            );
           } else {
             return CircularProgressIndicator();
           }

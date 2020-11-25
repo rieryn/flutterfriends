@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:major_project/localdb/settings_model.dart';
+import 'settings_model.dart';
 
 class Settings {
   String type;

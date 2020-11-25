@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home_page/home_page.dart';
-import 'places_page/places_page.dart';
-import 'people_page/people_page.dart';
-import 'live chat/live_chat_page.dart';
+import 'package:major_project/views/pages/home_page/home_page.dart';
+import 'package:major_project/views/pages/live%20chat/live_chat_page.dart';
+import '../pages/places_page.dart';
+import '../pages/people_page.dart';
 
 class NavigationController extends StatefulWidget {
   @override
@@ -12,13 +12,9 @@ class NavigationController extends StatefulWidget {
 class _NavigationControllerState extends State<NavigationController> {
   // storage keys allow the pages to not be reloaded every set state and retain their scroll position
   final List<Widget> pages = [
-    HomePage(
-      key: PageStorageKey('home_page'),
-    ),
+    HomePage(key: PageStorageKey('home_page')),
     PeoplePage(key: PageStorageKey('people_page')),
-    MapPage(
-      key: PageStorageKey('map_page'),
-    ),
+    MapPage(key: PageStorageKey('map_page')),
     LiveChatPage(key: PageStorageKey('live_chat_page')),
   ];
 

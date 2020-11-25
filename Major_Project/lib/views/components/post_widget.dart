@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:major_project/Posts/post.dart';
+import 'package:major_project/Posts/post_model.dart';
 
 class PostWidget extends StatefulWidget {
   Post post;

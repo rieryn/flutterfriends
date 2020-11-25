@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:major_project/Users/user_model.dart';
-import 'package:major_project/Users/users.dart';
-import 'package:major_project/navigation_controller.dart';
-import 'package:major_project/sign-in/sign_up_popup.dart';
+import 'package:major_project/models/app_user_model.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/navigation_controller.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/sign_up_popup.dart';
 
 class UserSignIn extends StatefulWidget {
   @override

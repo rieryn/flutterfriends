@@ -1,9 +1,11 @@
-import 'package:major_project/Posts/add_post_popup.dart';
-import 'package:major_project/Posts/post.dart';
+import 'package:major_project/views/pages/home_page/posts_tab.dart';
+
+import 'all_posts_tab.dart';
+import 'check_ins_tab.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/add_post_popup.dart';
 import 'package:major_project/Posts/post_model.dart';
-import 'package:major_project/home_page/all_posts_tab.dart';
-import 'package:major_project/home_page/posts_tab.dart';
-import 'package:major_project/home_page/check_ins_tab.dart';
+import 'package:major_project/Posts/post_model.dart';
+
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

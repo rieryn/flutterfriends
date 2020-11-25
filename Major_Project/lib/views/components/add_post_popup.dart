@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:major_project/Posts/post.dart';
+import 'package:major_project/Posts/post_model.dart';
 
 class AddPostPopup extends StatefulWidget {
   @override

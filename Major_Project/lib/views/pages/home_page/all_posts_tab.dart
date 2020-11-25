@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:major_project/Posts/post.dart';
-import 'package:major_project/Posts/post_widget.dart';
+import 'package:major_project/Posts/post_model.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/post_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:major_project/notifications.dart';
+import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/services/notifications.dart';
 
 class AllPostsTab extends StatefulWidget {
   @override
