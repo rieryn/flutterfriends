@@ -9,8 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:major_project/main.dart';
+import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
 
-void main() {
+Future<void> main() async {
+  final dummySnapshot = [
+    {"name": "Filip", "votes": 15},
+    {"name": "Abraham", "votes": 14},
+  ];
+  final instance = MockFirestoreInstance();
+  await instance.collection('users').add({
+    'username': 'Bob',
+  });
+  final snapshot = await instance.collection('users').get();
+  print(snapshot.documents.length); // 1
+  print(snapshot.documents.first['username']); // 'Bob'
+  print(instance.dump());
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
