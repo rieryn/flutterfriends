@@ -1,10 +1,8 @@
 import 'dart:async';
-//import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'dart:math' as math;
 import 'package:geolocator/geolocator.dart';
-import 'package:major_project/Posts/posts.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:scidart/numdart.dart';
 
