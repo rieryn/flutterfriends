@@ -80,6 +80,9 @@ Future<void> _configureLocalTimeZone() async {
 Future<void> main() async {
   //notifications init
   WidgetsFlutterBinding.ensureInitialized();
+  final db = FirebaseService();
+  print(db);
+
 
 
   final NotificationAppLaunchDetails notificationAppLaunchDetails =
@@ -116,12 +119,15 @@ Future<void> main() async {
         }
         selectNotificationSubject.add(payload);
       });
-  runApp(
+  runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
-      create: (context) => MarkerPopupModel
-        (),
-      child: MyApp(),
-    ),
+      create: (context) => MarkerPopupModel()),
+    StreamProvider<List<Post>>.value(
+      value: db.streamPosts()),
+  ],
+    child: MyApp(),
+
+  ),
   );
 }
 
@@ -146,7 +152,6 @@ class _CustomInfoWindowState extends State<CustomInfoWindow> {
   BitmapDescriptor testuserIcon; //todo
   BitmapDescriptor messageicon;
   List<Post> posts;
-  final db = FirebaseService();
   @override
   void initState() {
     super.initState();
@@ -180,17 +185,25 @@ class _CustomInfoWindowState extends State<CustomInfoWindow> {
     ),
   };
   final Map<String, Post> _testPosts = {
-    "p1": Post(
+  /*  "p1": Post(
       postid:"docid",
       user:"bunny",
       desc:"test",
       userimg:"https://via.placeholder.com/150",
       location:LatLng(43.897095, -78.86225791),
-    ),
+    ),*/
   };
 
   final double _infoWindowWidth = 250;
   final double _popupOffset = 170;
+  List<Marker> addMarkers(snaps, markersList) {
+    for (int i = 0; i < snaps.length; ++i) {
+      markersList.add(Marker(
+        markerId: MarkerId(snaps[i]['venueName']),
+        position: LatLng(snaps[i]['latN'], snaps[i]['longE']),
+      ));
+    }
+  }
 
   Set<Marker> _markers = Set<Marker>();
 
@@ -198,30 +211,37 @@ class _CustomInfoWindowState extends State<CustomInfoWindow> {
   @override
   Widget build(BuildContext context) {
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
-    /*posts.forEach((v) =>{
-        _markers.add(
-          Marker(
-            markerId: MarkerId(v.postid),
-            position: v.location,
-            icon: messageicon,
+    final postsList = Provider.of<List<Post>>(context);
+    print("postslist: ");
+    print(postsList);
 
-            onTap: () {
-              providerObject.updatePopup(
-                context,
-                mapController,
-                v.location,
-                _infoWindowWidth,
-                _popupOffset,
-              );
-              providerObject.updatePost(v);
-              providerObject.updateUser(null);
-              providerObject.updateVisibility(true);
-              providerObject.rebuild();
-              print (providerObject);
-            },
-          )
+    if(postsList !=null) {
+      postsList.forEach((v) =>
+      {
+        _markers.add(
+            Marker(
+              markerId: MarkerId(v.postid),
+              position: v.location,
+              icon: messageicon,
+
+              onTap: () {
+                providerObject.updatePopup(
+                  context,
+                  mapController,
+                  v.location,
+                  _infoWindowWidth,
+                  _popupOffset,
+                );
+                providerObject.updatePost(v);
+                providerObject.updateUser(null);
+                providerObject.updateVisibility(true);
+                providerObject.rebuild();
+                print(providerObject);
+              },
+            )
         )});
-    print(_markers);*/
+    };
+    print(_markers);
     _testPosts.forEach(
           (k, v) => _markers.add(
         Marker(
@@ -279,7 +299,7 @@ class _CustomInfoWindowState extends State<CustomInfoWindow> {
         title: Text('Map'),
         backgroundColor: Colors.blue,
       ),
-      body: Container(
+      body: Container( //consume markers here
         child: Consumer<MarkerPopupModel>(
           builder: (context, model, child) {
             return Stack(
@@ -390,4 +410,5 @@ class _CustomInfoWindowState extends State<CustomInfoWindow> {
       ),
     );
   }
+
 }

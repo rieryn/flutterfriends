@@ -23,13 +23,14 @@ class Post {
   });
   factory Post.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
-
+    double lat = data['location'].latitude ?? '';
+    double lng = data['location'].longitude ?? '';
     return Post(
         postid: doc.documentID,
         user: data['uid'] ?? '',
         desc: data['desc'] ?? '',
         userimg: data['userimg'] ?? '',
-        location: data['location'] ?? '',
+        location: LatLng(lat, lng),
     );
   }
 }
