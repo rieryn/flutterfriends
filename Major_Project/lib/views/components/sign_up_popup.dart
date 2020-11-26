@@ -77,11 +77,11 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                       if (_formkey.currentState.validate()) {
                         _formkey.currentState.save();
                         // push new user
-                        Navigator.of(context).pop(User(
+                        /*Navigator.of(context).pop(User(
                           username: _username,
                           password: _password,
                           birthday: _birthday,
-                        ));
+                        ));*/
                       }
                     }),
               ),

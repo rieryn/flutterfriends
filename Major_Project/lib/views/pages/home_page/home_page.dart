@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:major_project/models/post_model.dart';
+import 'package:major_project/views/components/add_post_dialog.dart';
 import 'package:major_project/views/pages/home_page/posts_tab.dart';
 import 'package:provider/provider.dart';
 import 'feed_tab.dart';
 import 'check_ins_tab.dart';
-import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/add_post_dialog.dart';
+import 'package:major_project/views/components/add_post_dialog.dart';
 import 'package:flutter/material.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -20,6 +22,12 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+          drawer: Drawer(//profile
+
+          ),
+          endDrawer: Drawer(//settings, etc.
+
+          ),
           body: NestedScrollView(
             // scroll should collapse app bar
             // scroll controller not working
@@ -53,13 +61,6 @@ class _HomePageState extends State<HomePage> {
                   floating: true,
                   pinned: true,
                   snap: true,
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(text: 'Feed'),
-                      Tab(text: 'Posts'),
-                      Tab(text: 'Check-ins'),
-                    ],
-                  ),
                 ),
               ];
             },
@@ -77,9 +78,17 @@ class _HomePageState extends State<HomePage> {
 
               child: Icon(Icons.add),
               onPressed: () async {
-                var user = Provider.of<User>(context);
+                var user = Provider.of<User>(context, listen: false);
                 bool loggedIn = user != null;
-                if(loggedIn){//bring up add_post
+                if(loggedIn){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AddPostPopup();
+                      },
+                    ),
+                  );//bring up add_post
+
 
                    }
                 else{//else prompt login

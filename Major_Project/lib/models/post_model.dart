@@ -1,5 +1,4 @@
-import 'dart:html';
-import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +16,9 @@ class Post {
   final String userImgURL;
   final String postImgURL;
   final LatLng location;
-  final DocumentReference postedBy;
+  final String postedBy;
   final int numLikes;
-  final Map comments;
+  //final Map comments;
   final DateTime postedDate;
 
   Post({
@@ -40,13 +39,14 @@ class Post {
     this.postedDate,
 
     //firebase subcollection
-    this.comments,
+   // this.comments,
 
     //firebase geopoint
     this.location,
   });
   factory Post.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data as Map;
+    print(doc);
+    Map<String, dynamic> data = doc.data();
     double lat = data['location'].latitude ?? 0;
     double lng = data['location'].longitude ?? 0;
     DateTime parsedTimestamp = DateTime.parse(data['postedDate'].toDate().toString());
@@ -54,13 +54,13 @@ class Post {
     return Post(
       postid: doc.id,
       postedBy: data['postedBy'] ?? '',
-      numLikes: data['numLikes'] ?? '',
-      username: data['uid'] ?? '',
-      comments: doc.reference.collection('comments').snapshots().map((list) =>
-          list.docs.map((doc) => UserComment.fromFirestore(doc)).toList()) ?? '',
-      body: data['desc'] ?? '',
-      userImgURL: data['userimg'] ?? '',
-      postImgURL: data['userimg'] ?? '',
+      numLikes: data['numLikes'] ?? 0,
+      username: data['username'] ?? '',
+      /*comments: doc.reference.collection('comments').snapshots().map((list) =>
+          list.docs.map((doc) => UserComment.fromFirestore(doc)).toList()) ?? ''*/
+      body: data['body'] ?? '',
+      userImgURL: data['userImgURL'] ?? '',
+      postImgURL: data['postImgURL'] ?? '',
       location: LatLng(lat, lng),
       postedDate: parsedTimestamp ?? '',
     );

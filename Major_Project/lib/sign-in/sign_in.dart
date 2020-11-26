@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:major_project/Users/user_model.dart';
-import 'package:major_project/Users/users.dart';
-import 'package:major_project/navigation_controller.dart';
-import 'package:major_project/sign-in/sign_up_popup.dart';
 
+/*
 class UserSignIn extends StatefulWidget {
   @override
   _UserSignInState createState() => _UserSignInState();
@@ -120,3 +117,4 @@ class _UserSignInState extends State<UserSignIn> {
     }
   }
 }
+*/

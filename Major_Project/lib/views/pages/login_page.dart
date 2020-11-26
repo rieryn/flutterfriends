@@ -33,23 +33,28 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               FlutterLogo(size: 150),
               SizedBox(height: 50),
-              Row(children:[
-                TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Email', hintText: 'email@org.com'),
-                  onChanged: (String value) {
-                    _email = value;
-                  },
-                ),
-                TextFormField(
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                      labelText: 'Password', hintText: 'Enter password'),
-                  onChanged: (String value) {
-                    _password = value;
-                  },
-                ),
-              ]),
+              SizedBox(
+                width: 100,
+                height: 50,
+                child: Row(children:[
+                  Expanded(child: TextFormField(
+                    decoration: const InputDecoration(
+                        labelText: 'Email', hintText: 'email@org.com'),
+                    onChanged: (String value) {
+                      _email = value;
+                    },
+                  )),
+                  Expanded(child: TextFormField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                        labelText: 'Password', hintText: 'Enter password'),
+                    onChanged: (String value) {
+                      _password = value;
+                    },
+                  )),
+                ]),
+              ),
+
               Row(children:[
                 _signInButton(_email, _password),
                 _registerButton(_email, _password),
@@ -140,6 +145,13 @@ class _LoginPageState extends State<LoginPage> {
               email: _email,
               password: _password
           );
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return HomePage();
+              },
+            ),
+          );
 
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') { //todo:snackbar or red text
@@ -178,10 +190,23 @@ class _LoginPageState extends State<LoginPage> {
   //todo: username prompt after registering
 
   Widget _guestSignInButton(){
+    final _user = Provider.of<User>(context);
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () async {
-        await _auth.signInAnonymously();
+        try{
+          await _auth.signInAnonymously();
+          final _username = await UsernameDialog.getUsername(context);//todo: try to pass in username
+          _db.addProfile(uid: _user.uid, username: _username ?? 'Anonymous', profileImgURL: 'http://placekitten.com/200/300', location: LatLng(0,0));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return HomePage();
+              },
+            ),
+          );
+        }
+        catch(e){print(e);}
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,

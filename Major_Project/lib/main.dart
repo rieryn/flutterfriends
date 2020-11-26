@@ -90,8 +90,7 @@ class _MyAppState extends State<MyApp> {
                 home: NavigationController(),
                 routes: <String, WidgetBuilder>{
                   //named routes
-                  '/UserSignIn': (BuildContext context) =>
-                      UserSignIn(),
+                  '/home': (BuildContext context) => NavigationController(),
                   '/settings': (BuildContext context) => PickSetting(),
                   '/login': (BuildContext context) => LoginPage(),
                 })

@@ -12,11 +12,14 @@ class FeedTab extends StatelessWidget {
     var _notifications = Notifications();
     var postsList = Provider.of<List<Post>>(context);
     _notifications.init();
-    return ListView(
-      children: postsList.map((value){
-        return PostComponent(value);
-      }).toList(),
-    );
+    if(postsList != null) {
+      return ListView(
+        children: postsList.map((value) {
+          return PostComponent(value);
+        }).toList(),
+      );
+    }
+    return CircularProgressIndicator();
   }
 }
 
