@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:major_project/models/post_model.dart';
+import 'package:major_project/models/profile_model.dart';
 
 
 class MarkerPopupModel
@@ -13,7 +14,7 @@ class MarkerPopupModel
   bool _visible = false;
   bool _tempHidden = false;
   Post _post;
-  User _user;
+  Profile _profile;
   double _leftMargin;
   double _topMargin;
 
@@ -21,8 +22,8 @@ class MarkerPopupModel
     notifyListeners();
   }
 
-  void updateUser(User user){
-    _user = user;
+  void updateProfile(Profile profile){
+    _profile = profile;
   }
   void updatePost(Post post) {
     _post = post;
@@ -64,5 +65,5 @@ class MarkerPopupModel
   double get topMargin => _topMargin;
 
   Post get post => _post;
-  User get user => _user;
+  Profile get profile => _profile;
 }

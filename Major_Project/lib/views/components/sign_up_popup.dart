@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:major_project/Users/users.dart';
 
 class SignUpPopUp extends StatefulWidget {
   @override

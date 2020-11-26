@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:major_project/models/app_user_model.dart';
+import 'package:major_project/models/profile_model.dart';
 import 'dart:async';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
@@ -23,44 +23,67 @@ class FirebaseService {
     return ref.snapshots().map((list) =>
         list.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
-
+  //every method calling imgurl needs to check null
   //add post
-  Future<void> addPost(String username,String body, String userImgURL, String postImgURL, DocumentReference uid, LatLng location) {
-    return _db.collection('posts').doc().set({
-      "username":username,
-      "body": body,
-      "userImgURL":userImgURL,
-      "postImgURL":postImgURL,
-      "location": GeoPoint(location.latitude, location.longitude),
-      "postedBy": uid,
-      "postedDate": Timestamp.now(),
+  Future<void> addPost({String username,String body, String userImgURL, String postImgURL, String uid, LatLng location}) {
+    return _db
+        .collection('posts')
+        .doc()
+        .set({
+      "username":username ?? '',
+      "body": body ?? '',
+      "userImgURL":userImgURL ?? 'http://placekitten.com/200/300',
+      "postImgURL":postImgURL ?? 'http://placekitten.com/200/300',
+      "location": GeoPoint(location.latitude, location.longitude) ?? GeoPoint(0,0),
+      "postedBy": uid ?? '',
+      "postedDate": Timestamp.now() ?? 0,
     });
   }
-  //users
-  //todo: update with firebase auth
+
   //getone
-  Stream<AppUser> streamUser(String id) {
+  Stream<Profile> streamProfile(String id) {
     return _db
-        .collection('users')
+        .collection('profiles')
         .doc(id)
         .snapshots()
-        .map((snap) => AppUser.fromFirestore(snap));
+        .map((snap) => Profile.fromFirestore(snap));
   }
 
   //getall
-  Stream<List<AppUser>> streamUsers() {
-    var ref = _db.collection('users');
+  Stream<List<Profile>> streamProfiles() {
+    var ref = _db.collection('profiles');
 
     return ref.snapshots().map((list) =>
-        list.docs.map((doc) => AppUser.fromFirestore(doc)).toList());
+        list.docs.map(
+                (doc) => Profile.fromFirestore(doc)
+        ).toList());
   }
-
+  //every method calling imgurl needs to check null
   //add user
-  Future<void> addUser(String name, String image, LatLng location) {
-    return _db.collection('users').doc().set({
-      "name": name,
-      "image": image,
-      "location": location,
+  Future<void> addProfile({String uid, String username, String profileImgURL, LatLng location}) {
+    return _db.collection('profiles')
+        .doc(uid)
+        .set({
+      "username": username ?? 'Anonymous',
+      "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300',
+      "location": GeoPoint(location.latitude, location.longitude) ?? GeoPoint(0,0),
+    });
+  }
+  //update profile
+  Future<void> updateProfileUsername({String uid, String username}){
+    return _db.collection('profiles')
+        .doc(uid)
+        .set({
+      "username": username ?? 'Anonymous'
+    });
+  }
+  //every method calling imgurl needs to check null
+  //update profile image
+  Future<void> updateProfileImage({String uid, String profileImgURL}){
+    return _db.collection('profiles')
+        .doc(uid)
+        .set({
+      "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300'
     });
   }
 

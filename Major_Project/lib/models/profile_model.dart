@@ -12,25 +12,25 @@ import 'user_comment_model.dart';
 
 
 
-class AppUser {
-  final String userid;
-  final String name;
-  final String image;
+class Profile {
+  final String profileId;
+  final String username;
+  final String profileImgURL;
   final LatLng location;
 
-  AppUser({
-    this.userid,
-    this.name,
-    this.image,
+  Profile({
+    this.profileId,
+    this.username,
+    this.profileImgURL,
     this.location,
   });
-  factory AppUser.fromFirestore(DocumentSnapshot doc) {
+  factory Profile.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data as Map;
 
-    return AppUser(
-      userid: doc.id,
-      name: data['name'] ?? '',
-      image: data['image'] ?? '',
+    return Profile(
+      profileId: doc.id,
+      username: data['username'] ?? '',
+      profileImgURL: data['profileImgURL'] ?? '',
       location: data['location'] ?? '',
     );
   }

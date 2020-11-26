@@ -5,7 +5,7 @@ Group members (3-5) (no Student IDs, only names):
 1. Aleem Alibhai (aleemalibhai)
 2. Manmeet Choudhary (ManmeetChoudhary)
 3. William Rory Chisholm (rorychisholm)
-4. Group Member4 (github_username4)
+4. Aurie Tan (rieryn)
 5. PJ Walton (Dark-Ronald)
 
 FORMATIVE ASSESMENT CHECKLIST:

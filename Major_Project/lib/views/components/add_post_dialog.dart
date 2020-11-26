@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:major_project/Posts/post_model.dart';
 import 'package:major_project/models/post_model.dart';
+import 'package:major_project/services/firebase_services.dart';
+import 'package:provider/provider.dart';
 
 class AddPostPopup extends StatefulWidget {
   @override
@@ -11,9 +13,11 @@ class _AddPostPopupState extends State<AddPostPopup> {
   String _text;
   String _location;
   String _image;
+  final _db = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
+    var _user;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -101,15 +105,16 @@ class _AddPostPopupState extends State<AddPostPopup> {
               padding: EdgeInsets.only(top: 4, bottom: 8),
               child: RaisedButton(
                 child: Text('Check In'),
-                onPressed: () => Navigator.of(context).pop(Post(
-                  username: "Username",
-                  location: _location,
-                  mainText: _text,
-                  image: _image,
-                  numLikes: 0,
-                  comments: [],
-                  postedDate: DateTime.now(),
-                )),
+                onPressed: (){
+                  _user = Provider.of<User>(context);
+                  _db.addPost(
+                      username: _user.username,
+                      body: _text?? '',
+                      userImgURL: User ?? 'null',
+                      postImgURL: _image ?? null,
+                      uid: _user.uid,
+                      location: _location ?? 0);
+                }
               ),
             ),
           ],

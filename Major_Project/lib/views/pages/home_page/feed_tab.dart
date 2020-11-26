@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/post_widget.dart';
 import 'package:flutter/material.dart';
 import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/services/notifications.dart';
 import 'package:major_project/models/post_model.dart';

@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:major_project/services/firebase_authentication.dart';
 import 'package:major_project/services/firebase_services.dart';
 import 'package:major_project/views/components/sign_up_popup.dart';
+import 'package:major_project/views/components/username_dialog.dart';
+import 'package:provider/provider.dart';
 
 import 'home_page/home_page.dart';
 
@@ -60,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
   }
   //todo: move all this logic somewhere
   Widget _registerButton(_email, _password){
+    final _user = Provider.of<User>(context);
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () async {
@@ -67,7 +72,10 @@ class _LoginPageState extends State<LoginPage> {
           await _auth.createUserWithEmailAndPassword(
               email:_email,
               password:_password);
-            } on FirebaseAuthException catch(e) {
+          //auth stream should return user now
+          final _username = await UsernameDialog.getUsername(context);//todo: try to pass in username
+          _db.addProfile(uid:_user.uid, username: _username, profileImgURL: 'http://placekitten.com/200/300', location: LatLng(0,0));
+        } on FirebaseAuthException catch(e) {
           if (e.code == 'account-exists-with-different-credential') {
             // The account already exists with a different credential
             String email = e.email;
@@ -121,6 +129,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+
   Widget _signInButton(_email, _password){
     return OutlineButton(
       splashColor: Colors.grey,
@@ -130,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
               email: _email,
               password: _password
           );
+
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') { //todo:snackbar or red text
             print('No user found for that email.');

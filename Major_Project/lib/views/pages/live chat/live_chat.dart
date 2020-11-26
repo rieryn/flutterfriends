@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'dart:math' as math;
 import 'package:geolocator/geolocator.dart';
-import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/post_widget.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:scidart/numdart.dart';
 
