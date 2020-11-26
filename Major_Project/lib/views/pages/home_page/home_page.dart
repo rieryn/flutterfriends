@@ -37,6 +37,12 @@ class _HomePageState extends State<HomePage> {
                   centerTitle: true,
                   actions: <Widget>[
                     IconButton(
+                      icon: Icon(Icons.person),
+                      onPressed: () async {
+                        Navigator.pushNamed(context, '/UserSignIn');
+                      },
+                    ),
+                    IconButton(
                       // settings menue
                       icon: Icon(Icons.settings),
                       onPressed: () {

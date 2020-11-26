@@ -29,25 +29,25 @@ class _NavigationControllerState extends State<NavigationController> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            title: Text('Home'),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // people tab
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            label: 'People',
+            title: Text('People'),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // places tab
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
-            label: 'Places',
+            title: Text('Places'),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // live chat app
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Live Chat',
+            title: Text('Live Chat'),
             backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
