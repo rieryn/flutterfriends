@@ -1,11 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:major_project/models/post_model.dart';
 import 'package:major_project/views/pages/home_page/posts_tab.dart';
-
-import 'all_posts_tab.dart';
+import 'package:provider/provider.dart';
+import 'feed_tab.dart';
 import 'check_ins_tab.dart';
 import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/add_post_popup.dart';
-import 'package:major_project/Posts/post_model.dart';
-import 'package:major_project/Posts/post_model.dart';
-
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -60,7 +59,7 @@ class _HomePageState extends State<HomePage> {
             },
             body: TabBarView(
               children: [
-                AllPostsTab(),
+                FeedTab(),
                 ThoughtsTab(),
                 CheckInsTab(),
               ],
@@ -68,14 +67,24 @@ class _HomePageState extends State<HomePage> {
           ),
           // add post button
           floatingActionButton: FloatingActionButton(
+
+
               child: Icon(Icons.add),
               onPressed: () async {
-                Post post = await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AddPostPopup();
-                    });
-                await PostModel.insertPost(post);
+                var user = Provider.of<User>(context);
+                bool loggedIn = user != null;
+                if(loggedIn){//bring up add_post
+
+                   }
+                else{//else prompt login
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Duration(seconds: 5),
+                        content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Text("Sign in or create an account to continue")]),
+                  ));
+                  Navigator.pushNamed(context, '/login');}
                 Scaffold.of(context).showSnackBar(SnackBar(
                   duration: Duration(seconds: 1),
                   content: Row(

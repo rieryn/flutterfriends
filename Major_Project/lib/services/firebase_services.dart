@@ -27,7 +27,6 @@ class FirebaseService {
   //add post
   Future<void> addPost(String username,String body, String userImgURL, String postImgURL, DocumentReference uid, LatLng location) {
     return _db.collection('posts').doc().set({
-
       "username":username,
       "body": body,
       "userImgURL":userImgURL,

@@ -10,7 +10,6 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
   final _formkey = GlobalKey<FormState>();
   String _username;
   String _password;
-  DateTime _birthday = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -69,33 +68,6 @@ class _SignUpPopUpState extends State<SignUpPopUp> {
                       _password = value;
                     },
                   )),
-              // Birthday field
-              Container(
-                  padding:
-                      EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 8),
-                  child: Row(children: [
-                    Text('Birthday: ', style: TextStyle(fontSize: 14)),
-                    Text(
-                      '${_birthday.year}/${_birthday.month}/${_birthday.day}',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.calendar_today_outlined,
-                            color: Theme.of(context).primaryColor),
-                        onPressed: () {
-                          // date picker
-                          showDatePicker(
-                                  context: context,
-                                  initialDate: _birthday,
-                                  firstDate: DateTime(1900),
-                                  lastDate: _birthday)
-                              .then((value) {
-                            setState(() {
-                              _birthday = value;
-                            });
-                          });
-                        })
-                  ])),
               // Sign up button. might need to move this UX is not great
               // I keep clicking it as if it was submit
               Container(

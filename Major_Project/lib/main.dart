@@ -6,6 +6,7 @@ import 'package:major_project/services/localdb/settings.dart';
 import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/pages/sign_in.dart';
 import 'file:///X:/git/major-group-project-mobile-group/Major_Project/lib/views/components/navigation_controller.dart';
 import 'package:major_project/services/localdb/settings_model.dart';
+import 'package:major_project/views/pages/login_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/post_model.dart';
@@ -87,12 +88,13 @@ class _MyAppState extends State<MyApp> {
                   visualDensity: VisualDensity.adaptivePlatformDensity,
                 ),
                 // home: NavigationController(),
-                home: UserSignIn(), //homepage is user signin
+                home: NavigationController(),
                 routes: <String, WidgetBuilder>{
                   //named routes
                   '/NavigationController': (BuildContext context) =>
                       NavigationController(),
                   '/settings': (BuildContext context) => PickSetting(),
+                  '/login': (BuildContext context) => LoginPage(),
                 })
             );
           } else {
