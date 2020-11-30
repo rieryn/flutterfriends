@@ -10,7 +10,7 @@ import 'package:major_project/models/post_model.dart';
 import 'package:major_project/models/profile_model.dart';
 import 'package:major_project/services/global_singleton.dart';
 import 'package:provider/provider.dart';
-
+//(0,0) is in ukraine just fyi
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
   @override

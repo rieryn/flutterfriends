@@ -1,13 +1,22 @@
+
+import 'dart:async';
+import 'dart:async';
+import 'dart:core';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:major_project/models/profile_model.dart';
-import 'dart:async';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
 
 class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final geo = Geoflutterfire();
+  final String postCollectionReference = 'posts';
+  final String profileCollectionReference = 'profiles';
+
 
   Stream<Post> streamPost(String id) {
     return _db
@@ -58,6 +67,18 @@ class FirebaseService {
                 (doc) => Profile.fromFirestore(doc)
         ).toList());
   }
+  //query within radius
+  // Create a geoFirePoint
+  Stream<List<DocumentSnapshot>> getProfilesInRadius(double radius){
+  GeoFirePoint center = geo.point(latitude: 12.960632, longitude: 77.641603);//todo:change to curr loc
+  Stream<List<DocumentSnapshot>> stream;
+  double radius = 50;
+  String field = 'position';
+  var collectionReference = _db.collection('profile_locations');
+  stream = geo.collection(collectionRef: collectionReference)
+      .within(center: center, radius: radius, field: field);
+  return stream;}
+
   //every method calling imgurl needs to check null
   //add user
   Future<void> addProfile({String uid, String username, String profileImgURL, LatLng location}) {
@@ -93,5 +114,6 @@ class FirebaseService {
       "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300'
     });
   }
+
 
 }

@@ -24,7 +24,7 @@ class Profile {
     this.location,
   });
   factory Profile.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data as Map;
+    Map data = doc.data();
 
     return Profile(
       profileId: doc.id,

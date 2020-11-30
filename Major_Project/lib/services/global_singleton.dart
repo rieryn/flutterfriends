@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 //global variables
 //sort this out later...
 //might be okay? the marker icons only have to be converted to bitmap once, for non profile images
+//it would take too long to convert individual profile icons anyway so either just don't, or async generate and cache them here
 class GlobalSingleton {
   init(){
     fetchMessageIcon();
