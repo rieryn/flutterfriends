@@ -27,7 +27,8 @@ class _MapPageState extends State<MapPage> {
     getBytesFromAsset('assets/bunny.jpg', 128).then((onValue) {
       testuserIcon =BitmapDescriptor.fromBytes(onValue);});
     getBytesFromAsset('assets/message.png', 128).then((onValue) {
-      messageicon =BitmapDescriptor.fromBytes(onValue);});
+      messageicon =BitmapDescriptor.fromBytes(onValue);print(testuserIcon);}
+      );
     print(testuserIcon);
     print("is init running before");
 
@@ -65,7 +66,7 @@ class _MapPageState extends State<MapPage> {
   List<Marker> addMarkers(snaps, markersList) {
     for (int i = 0; i < snaps.length; ++i) {
       markersList.add(Marker(
-        markerId: MarkerId(snaps[i]['venueName']),
+        markerId: MarkerId(snaps[i]['markerID']),
         position: LatLng(snaps[i]['latN'], snaps[i]['longE']),
       ));
     }
@@ -82,6 +83,7 @@ class _MapPageState extends State<MapPage> {
     print(postsList);
 
     if(postsList !=null) {
+      _markers.clear();
       postsList.forEach((v) =>
       {
         _markers.add(
@@ -108,6 +110,8 @@ class _MapPageState extends State<MapPage> {
         )});
     };
     print(_markers);
+    print(messageicon);
+
     _testPosts.forEach(
           (k, v) => _markers.add(
         Marker(

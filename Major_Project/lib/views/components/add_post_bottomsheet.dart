@@ -52,6 +52,7 @@ class AddPostBottomsheet extends StatelessWidget {
             _imageURL = _profile.profileImgURL;}
           );//todo: make a provider
     return Container(
+      color: Color(0xFF737373),
       child: Container(
         padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
@@ -66,14 +67,14 @@ class AddPostBottomsheet extends StatelessWidget {
             ClipOval(
               child: CachedNetworkImage(
                 imageUrl: _imageURL,
-                placeholder: (context, url) => Image.asset('assets/images/bunny.jpg'),
+                placeholder: (context, url) => Image.asset('assets/bunny.jpg'),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
               ),
             ),
-            Column(
+            Expanded(child:Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextFormField(
@@ -122,7 +123,7 @@ class AddPostBottomsheet extends StatelessWidget {
               },
             ),
           ],
-          ),
+          )),
           ]
         )
       ),
