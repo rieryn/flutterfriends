@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:major_project/views/pages/home_page/home_page.dart';
 import 'package:major_project/views/pages/live%20chat/live_chat_page.dart';
-import '../pages/places_page.dart';
+import 'package:major_project/views/pages/map_page.dart';
 import '../pages/people_page.dart';
 
 class NavigationController extends StatefulWidget {
@@ -38,10 +38,10 @@ class _NavigationControllerState extends State<NavigationController> {
             title: Text('People'),
             backgroundColor: Theme.of(context).primaryColor,
           ),
-          // places tab
+          // map tab
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text('Places'),
+            icon: Icon(Icons.location_on_outlined),
+            title: Text('explore'),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // live chat app

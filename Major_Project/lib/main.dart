@@ -7,6 +7,7 @@ import 'package:major_project/views/components/navigation_controller.dart';
 import 'package:major_project/views/pages/login_page.dart';
 import 'package:provider/provider.dart';
 
+import 'models/markerpopup_model.dart';
 import 'models/post_model.dart';
 import 'models/profile_model.dart';
 import 'models/settings_model.dart';
@@ -51,6 +52,9 @@ class _MyAppState extends State<MyApp> {
             final db = FirebaseService();
             return MultiProvider(
                 providers: [
+                  //map marker provider, this really could be somewhere else
+                  ChangeNotifierProvider(
+                      create: (context) => MarkerPopupModel()),
                   //todo:decide where to put these later
                   //auth provider
                   StreamProvider<User>.value(value: FirebaseAuth.instance.authStateChanges()),
