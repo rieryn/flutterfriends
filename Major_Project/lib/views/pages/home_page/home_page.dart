@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:major_project/models/post_model.dart';
+import 'package:major_project/views/components/add_post_bottomsheet.dart';
 import 'package:major_project/views/components/add_post_dialog.dart';
 import 'package:major_project/views/pages/home_page/posts_tab.dart';
 import 'package:provider/provider.dart';
@@ -73,24 +74,27 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           // add post button
-          floatingActionButton: FloatingActionButton(
-
-
-              child: Icon(Icons.add),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: FloatingActionButton.extended(
+              icon: Icon(Icons.add),
+              label: Text("create new post..."),
+              backgroundColor: Colors.green,//try to make it look like bottomsheet
               onPressed: () async {
                 var user = Provider.of<User>(context, listen: false);
                 bool loggedIn = user != null;
-                if(loggedIn){
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AddPostPopup();
-                      },
-                    ),
-                  );//bring up add_post
-
-
-                   }
+                if(loggedIn){ //bring up addpost
+                  showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: AddPostBottomsheet(),
+                        ),
+                      ),
+                    );
+                  }
                 else{//else prompt login
                   Scaffold.of(context).showSnackBar(
                       SnackBar(

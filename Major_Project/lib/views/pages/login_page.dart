@@ -196,6 +196,7 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () async {
         try{
           await _auth.signInAnonymously();
+          if (_user.displayName == null){_user.updateProfile(displayName:'Anonymous', photoURL: 'http://placekitten.com/200/300');}
           final _username = await UsernameDialog.getUsername(context);//todo: try to pass in username
           _db.addProfile(uid: _user.uid, username: _username ?? 'Anonymous', profileImgURL: 'http://placekitten.com/200/300', location: LatLng(0,0));
           Navigator.of(context).push(

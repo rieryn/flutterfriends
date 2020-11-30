@@ -2,16 +2,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:major_project/services/firebase_services.dart';
-import 'package:major_project/services/localdb/settings.dart';
+import 'package:major_project/services/localdb/sqlite_services.dart';
 import 'package:major_project/views/components/navigation_controller.dart';
-import 'package:major_project/services/localdb/settings_model.dart';
 import 'package:major_project/views/pages/login_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/post_model.dart';
+import 'models/profile_model.dart';
+import 'models/settings_model.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  //wrap in localdb init
+    runApp(
+      ChangeNotifierProvider<Settings>(
+        create: (_) => Settings('blueTheme'),
+        child: MyApp(),
+      ),
+    );
+  //});
 }
 
 class MyApp extends StatefulWidget {
@@ -20,47 +29,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var _color;
 
   //initialize local database to load Theme settings to build the app
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
-
-    _getSettings().then((value) {
-      setState(() {
-        switch (value.color) {
-          case "Blue":
-            {
-              _color = Colors.blue;
-            }
-            break;
-
-          case "Deep Purple":
-            {
-              _color = Colors.deepPurple;
-            }
-            break;
-
-          case "Amber":
-            {
-              _color = Colors.amber;
-            }
-            break;
-
-          default:
-            {
-              _color = Colors.deepPurple;
-            }
-            break;
-        }
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-
+    var _color;
     return FutureBuilder(
         //future builder to establish connecton to Cloud db
         future: Firebase.initializeApp(),
@@ -91,7 +69,6 @@ class _MyAppState extends State<MyApp> {
                 routes: <String, WidgetBuilder>{
                   //named routes
                   '/home': (BuildContext context) => NavigationController(),
-                  '/settings': (BuildContext context) => PickSetting(),
                   '/login': (BuildContext context) => LoginPage(),
                 })
             );
@@ -101,9 +78,5 @@ class _MyAppState extends State<MyApp> {
         });
   }
 
-  //read local database for settings
-  Future<Settings> _getSettings() async {
-    Settings settings = await SettingsModel.readSettings();
-    return settings;
-  }
+
 }

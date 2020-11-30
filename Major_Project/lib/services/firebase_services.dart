@@ -69,6 +69,13 @@ class FirebaseService {
       "location": GeoPoint(location.latitude, location.longitude) ?? GeoPoint(0,0),
     });
   }
+  //get profile
+  Future<Profile> getProfile({String uid}) async{
+    var snap = await _db.collection('profiles')
+        .doc(uid)
+        .get();
+    return Profile.fromFirestore(snap);
+  }
   //update profile
   Future<void> updateProfileUsername({String uid, String username}){
     return _db.collection('profiles')
