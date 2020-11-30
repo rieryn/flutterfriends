@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:major_project/services/firebase_services.dart';
+import 'package:major_project/services/global_singleton.dart';
 import 'package:major_project/services/localdb/sqlite_services.dart';
 import 'package:major_project/views/components/navigation_controller.dart';
 import 'package:major_project/views/pages/login_page.dart';
+import 'package:major_project/views/pages/map_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/markerpopup_model.dart';
@@ -34,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   //initialize local database to load Theme settings to build the app
   @override
   void initState() {
+    GlobalSingleton.instance.init();
     WidgetsFlutterBinding.ensureInitialized();
   }
 
@@ -74,6 +77,8 @@ class _MyAppState extends State<MyApp> {
                   //named routes
                   '/home': (BuildContext context) => NavigationController(),
                   '/login': (BuildContext context) => LoginPage(),
+
+                  '/map':(BuildContext context) => MapPage(),
                 })
             );
           } else {

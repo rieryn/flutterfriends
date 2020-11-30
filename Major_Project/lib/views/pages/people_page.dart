@@ -9,6 +9,14 @@ class PeoplePage extends StatefulWidget {
 class _PeoplePageState extends State<PeoplePage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      floatingActionButton:
+      FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/map');
+          // Add your onPressed code here!
+        },
+      )
+    );
   }
 }

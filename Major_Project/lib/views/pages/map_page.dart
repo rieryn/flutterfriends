@@ -1,4 +1,4 @@
-
+import 'package:async/async.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/models/profile_model.dart';
+import 'package:major_project/services/global_singleton.dart';
 import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
   GoogleMapController mapController;
   BitmapDescriptor testuserIcon; //todo
   BitmapDescriptor messageicon;
@@ -24,15 +26,23 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    getBytesFromAsset('assets/bunny.jpg', 128).then((onValue) {
-      testuserIcon =BitmapDescriptor.fromBytes(onValue);});
+    var v = _fetchBunny();
+    print(v);
     getBytesFromAsset('assets/message.png', 128).then((onValue) {
       messageicon =BitmapDescriptor.fromBytes(onValue);print(testuserIcon);}
       );
     print(testuserIcon);
     print("is init running before");
-
+    print('wtf is in memoizer');
+    print(_memoizer);
   }
+  _fetchBunny() {
+    return this._memoizer.runOnce(() async {
+      print('fetch bunny running');
+      var val = await getBytesFromAsset('assets/bunny.jpg', 128);
+        testuserIcon =BitmapDescriptor.fromBytes(val);
+      return val;
+    });  }
   //to bytestream
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
@@ -66,22 +76,16 @@ class _MapPageState extends State<MapPage> {
   List<Marker> addMarkers(snaps, markersList) {
     for (int i = 0; i < snaps.length; ++i) {
       markersList.add(Marker(
-        markerId: MarkerId(snaps[i]['markerID']),
+        markerId: MarkerId(snaps[i]['markerId']),
         position: LatLng(snaps[i]['latN'], snaps[i]['longE']),
       ));
     }
   }
 
   Set<Marker> _markers = Set<Marker>();
-
-
-  @override
-  Widget build(BuildContext context) {
+  void setPostMarkers(BitmapDescriptor messageicon){
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
     final postsList = Provider.of<List<Post>>(context);
-    print("postslist: ");
-    print(postsList);
-
     if(postsList !=null) {
       _markers.clear();
       postsList.forEach((v) =>
@@ -90,7 +94,7 @@ class _MapPageState extends State<MapPage> {
             Marker(
               markerId: MarkerId(v.postid),
               position: v.location,
-              icon: messageicon,
+              icon: GlobalSingleton.instance.messageIcon,
 
               onTap: () {
                 providerObject.updatePopup(
@@ -109,6 +113,14 @@ class _MapPageState extends State<MapPage> {
             )
         )});
     };
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
+    setPostMarkers(testuserIcon);
+
     print(_markers);
     print(messageicon);
 
@@ -143,7 +155,7 @@ class _MapPageState extends State<MapPage> {
         Marker(
           markerId: MarkerId(v.profileId),
           position: v.location,
-          icon: testuserIcon,
+          icon: GlobalSingleton.instance.bunnyIcon,
 
           onTap: () {
             providerObject.updatePopup(
@@ -267,6 +279,8 @@ class _MapPageState extends State<MapPage> {
                 }
               },
               onMapCreated: (GoogleMapController controller) {
+                setState(() {
+                });
                 mapController = controller;
               },
               markers: _markers,
