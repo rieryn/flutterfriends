@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 //sort this out later...
 //might be okay? the marker icons only have to be converted to bitmap once, for non profile images
 //it would take too long to convert individual profile icons anyway so either just don't, or async generate and cache them here
-class GlobalSingleton {
+class MarkerBitmapper {
   init(){
     fetchMessageIcon();
     fetchBunnyIcon();
@@ -15,11 +15,11 @@ class GlobalSingleton {
   BitmapDescriptor messageIcon;
   BitmapDescriptor bunnyIcon;
 
-  GlobalSingleton._privateConstructor();
+  MarkerBitmapper._privateConstructor();
 
-  static final GlobalSingleton _instance = GlobalSingleton._privateConstructor();
+  static final MarkerBitmapper _instance = MarkerBitmapper._privateConstructor();
 
-  static GlobalSingleton get instance => _instance;
+  static MarkerBitmapper get instance => _instance;
 
   static Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);

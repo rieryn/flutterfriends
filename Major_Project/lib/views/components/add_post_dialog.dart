@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:major_project/models/post_model.dart';
-import 'package:major_project/services/firebase_services.dart';
+import 'package:major_project/services/firestore_services.dart';
 import 'package:provider/provider.dart';
 
 class AddPostPopup extends StatefulWidget {

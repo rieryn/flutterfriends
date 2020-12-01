@@ -10,7 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/models/profile_model.dart';
-import 'package:major_project/services/global_singleton.dart';
+import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
@@ -99,7 +99,7 @@ class _MapPageState extends State<MapPage> {
             Marker(
               markerId: MarkerId(v.postid),
               position: v.location,
-              icon: GlobalSingleton.instance.messageIcon,
+              icon: MarkerBitmapper.instance.messageIcon,
 
               onTap: () {
                 providerObject.updatePopup(
@@ -201,7 +201,7 @@ class _MapPageState extends State<MapPage> {
         Marker(
           markerId: MarkerId(v.profileId),
           position: v.location,
-          icon: GlobalSingleton.instance.bunnyIcon,
+          icon: MarkerBitmapper.instance.bunnyIcon,
 
           onTap: () {
             providerObject.updatePopup(

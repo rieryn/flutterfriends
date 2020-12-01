@@ -28,6 +28,9 @@ dependencies:
   rxdart: ^0.24.1
   scidart: ^0.0.1-dev.6
   cached_network_image: ^2.3.3
+  image_picker:
+  clippy_flutter:
+
   #database dependencies
   http: ^0.12.0+4
   sqflite:
@@ -39,12 +42,12 @@ dependencies:
   cloud_firestore_mocks:
   firebase_auth:
   google_sign_in: ^4.5.3
+  firebase_storage:
   #gmaps dependencies
   google_maps_flutter: ^1.0.3
   flutter_polyline_points: ^0.1.0
   json_serializable: ^3.3.0
   device_info: ^0.4.2+4
-  clippy_flutter:
   geoflutterfire:
     git: git://github.com/DarshanGowda0/GeoFlutterFire.git
   location: ^3.0.0 #check help page for ios compatibility

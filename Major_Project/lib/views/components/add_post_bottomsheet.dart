@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:major_project/models/profile_model.dart';
-import 'package:major_project/services/firebase_services.dart';
+import 'package:major_project/services/firestore_services.dart';
 import 'package:provider/provider.dart';
 
 class AddPostBottomsheet extends StatelessWidget {
