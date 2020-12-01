@@ -32,6 +32,7 @@ dependencies:
   http: ^0.12.0+4
   sqflite:
   shared_preferences: ^0.5.7
+  path_provider: ^1.6.24
   #firebase dependencies
   firebase_core:
   cloud_firestore: 0.14.3+1
@@ -47,8 +48,9 @@ dependencies:
   geoflutterfire:
     git: git://github.com/DarshanGowda0/GeoFlutterFire.git
   location: ^3.0.0 #check help page for ios compatibility
-
-
+  #FREE geocoding
+  geocoding:
+  #provider
   provider:
   meta:
   # The following adds the Cupertino Icons font to your application.

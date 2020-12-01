@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:major_project/services/localdb/covid_db.dart';
 
 class PeoplePage extends StatefulWidget {
   PeoplePage({Key key}) : super(key: key);

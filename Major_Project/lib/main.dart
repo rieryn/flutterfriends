@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:major_project/services/firebase_services.dart';
 import 'package:major_project/services/global_singleton.dart';
+import 'package:major_project/services/localdb/covid_db.dart';
 import 'package:major_project/services/localdb/sqlite_services.dart';
 import 'package:major_project/views/components/navigation_controller.dart';
 import 'package:major_project/views/pages/login_page.dart';
@@ -16,6 +17,7 @@ import 'models/settings_model.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  CovidDB.instance.init();
   //wrap in localdb init
     runApp(
       ChangeNotifierProvider<Settings>(

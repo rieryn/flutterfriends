@@ -1,6 +1,8 @@
 import 'package:async/async.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:geocoding/geocoding.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +11,9 @@ import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/models/profile_model.dart';
 import 'package:major_project/services/global_singleton.dart';
+import 'package:major_project/services/localdb/covid_db.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 //(0,0) is in ukraine just fyi
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
@@ -25,6 +29,7 @@ class _MapPageState extends State<MapPage> {
   List<Post> posts;
   @override
   void initState() {
+
     super.initState();
     var v = _fetchBunny();
     print(v);
@@ -115,11 +120,52 @@ class _MapPageState extends State<MapPage> {
     };
 
   }
+  int _counter=0;
+  Set<Circle> _circles = Set<Circle>();
+  Iterable zip(Iterable<Iterable> iterables) {
+    var minLength = iterables.map((a) => a.length).reduce((a, b) => a < b ? a : b);
+    return new Iterable.generate(minLength, (i) => iterables.map((it) => it.elementAt(i)));
+  }
+  void _setCovidOverlay(List<List<Location>> locations, List<String> cases){
+    //probably breaks if they're not same length? please refactor
+
+    var whatever = zip([locations, cases]).toList();
+    //looks something like  ( ([lat lng time], cases), ...)
+    whatever.forEach((e) {
+      print(e);
+      print(e.last);
+      print(e.first[0]);//lmao
+      print(e.first[0].longitude);
+      _setCircle(LatLng(e.first[0].latitude, e.first[0].longitude), int.parse(e.last));
+    });
+
+
+
+  }
+  void _setCircle(LatLng location, int cases){ //if i have to put markers or the whole widget thing to get labels again i might as well use markers
+    final String circleid = 'circle_id_$_counter';
+    if(cases <=0){return;}
+    _counter++;
+
+    _circles.add(Circle(
+      circleId: CircleId(circleid),
+      center: location,
+      radius: log(cases)*2000,
+      fillColor: Colors.red[600].withOpacity(0.5),
+      strokeColor: Color(0x00000000),
+    )
+    );
+    return;
+
+  }
 
   @override
   Widget build(BuildContext context) {
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
     setPostMarkers(testuserIcon);
+    print(CovidDB.instance.tableCoordinates);
+    print(CovidDB.instance.caseList);
+    _setCovidOverlay(CovidDB.instance.tableCoordinates,CovidDB.instance.caseList);
 
     print(_markers);
     print(messageicon);
@@ -283,6 +329,7 @@ class _MapPageState extends State<MapPage> {
                 });
                 mapController = controller;
               },
+              circles: _circles,
               markers: _markers,
               initialCameraPosition: CameraPosition(
                 target: _center,
