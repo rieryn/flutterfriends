@@ -40,6 +40,7 @@ class AddPostBottomsheet extends StatelessWidget {
     final _db = FirebaseService();
     var _user = Provider.of<User>(context, listen: false);
     var _location = context.watch<LocationData>();
+    print(_location.toString());
     bool loggedIn = _user != null;
     String _imageURL = 'http://placekitten.com/200/300';
     String _post;
@@ -102,13 +103,14 @@ class AddPostBottomsheet extends StatelessWidget {
               ),
               color: Colors.blue,
               onPressed: () {
-                  _db.addPost(
+                print("adding at location: "+_location.toString());
+                _db.addPost(
                       username: _user.displayName,
                       body: _post?? '',
                       userImgURL: _user.photoURL ?? 'http://placekitten.com/200/300',
                       postImgURL: _imageURL ?? 'http://placekitten.com/200/300',
                       uid: _user.uid,
-                      location: LatLng(_location.latitude, _location.latitude) ?? LatLng(0,0));
+                      location: LatLng(_location.latitude, _location.longitude) ?? LatLng(0,0));
                 Navigator.pop(context);
               },
             ),

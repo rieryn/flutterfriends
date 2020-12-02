@@ -26,9 +26,20 @@ class LocationService {
     LocationData currentlocation;
 
     Future<void> tick(_) async {
-      currentLocation = await getCurrentLocation();
-      _streamController.add(currentlocation);
-      print(currentlocation.toString());
+
+      var controller = new StreamController<String>();
+
+
+      controller.stream.listen((item) => print(item)); // this is the trap
+
+      Location location = new Location();
+      LocationData _locationData;
+      _locationData = await location.getLocation();
+      controller.add(currentLocation.toString());
+      currentLocation =_locationData;
+      _streamController.add(_locationData);
+      print(_streamController.hasListener);
+      print(_locationData.toString());
       authStream.listen((snap){
         if (snap != null){
           _db.updateProfileLocation(uid: snap.uid, location: currentLocation);
@@ -47,7 +58,7 @@ class LocationService {
       if (timer != null) {
         timer.cancel();
         timer = null;
-        streamController.close();
+        _streamController.close();
         print("stream closed???");
       }
     }
@@ -102,12 +113,9 @@ class LocationService {
 
   Future<LocationData> getCurrentLocation() async {
     Location location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
     LocationData _locationData;
-
     _locationData = await location.getLocation();
-
+    print(_locationData.toString());
     return _locationData;
   }
 }

@@ -40,6 +40,7 @@ class FirebaseService {
   //add post
   Future<void> addPost(
       {String username, String body, String userImgURL, String postImgURL, String uid, LatLng location}) {
+    print("adding at location: "+location.toString());
     return _db
         .collection(postCollectionReference)
         .doc()

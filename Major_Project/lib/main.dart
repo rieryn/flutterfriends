@@ -62,7 +62,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    String uid = Provider.of<User>(context).uid;
+    User user = Provider.of<User>(context);
+    String uid;
+    if(user != null){uid = user.uid;}
     LocationData location = context.watch<LocationData>();
     var _color;
     final db = FirebaseService();

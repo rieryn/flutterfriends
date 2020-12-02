@@ -49,7 +49,7 @@ class ChatPaneState extends State<ChatPane> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.sessionId);
+    print("sessionid " +widget.sessionId);
     _user = Provider.of<User>(context);
     return Stack(
       children: <Widget>[
