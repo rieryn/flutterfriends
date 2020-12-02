@@ -25,7 +25,6 @@ dependencies:
     sdk: flutter
   flutter_compass: '^0.4.3'
   geolocator: ^6.1.0
-  rxdart: ^0.24.1
   scidart: ^0.0.1-dev.6
   cached_network_image: ^2.3.3
   image_picker:
@@ -53,9 +52,14 @@ dependencies:
   location: ^3.0.0 #check help page for ios compatibility
   #FREE geocoding
   geocoding:
-  #provider
+  #state management
   provider:
   meta:
+  flutter_hooks: ^0.15.0
+  rxdart: ^0.24.1
+  #flame!
+  flame:
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
@@ -67,8 +71,13 @@ dependencies:
   intl: ^0.16.1
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.8.0"
   flutter_test:
     sdk: flutter
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
 
 
 # For information on the generic Dart part of this file, see the

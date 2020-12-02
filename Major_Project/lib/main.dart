@@ -3,6 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:major_project/services/firestore_services.dart';
+import 'package:major_project/services/location_service.dart';
+import 'package:major_project/services/marker_bitmapper.dart';
+import 'package:major_project/services/localdb/covid_db.dart';
+import 'package:major_project/services/firestore_services.dart';
 import 'package:major_project/services/location_services.dart';
 import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
@@ -23,6 +27,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   CovidDB.instance.init();
+  await LocationService.instance.init();
   //wrap in localdb init
     runApp(
       MultiProvider(
@@ -31,6 +36,9 @@ void main() async {
               value: FirebaseAuth.instance.authStateChanges()),
             ChangeNotifierProvider<Settings>(
               create: (_) => Settings('blueTheme'),
+            ),
+            StreamProvider<LocationData>.value(
+              value: LocationService.instance.locationStream
             ),
           ],
           child: MyApp(),
@@ -46,7 +54,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<LocationData> currentLocation = getCurrentLocation();
   //initialize local database to load Theme settings to build the app
   @override
   void initState() {
@@ -56,54 +63,40 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     String uid = Provider.of<User>(context).uid;
+    LocationData location = context.watch<LocationData>();
     var _color;
     final db = FirebaseService();
-    return FutureBuilder<LocationData>(
-        future: currentLocation,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return MultiProvider(
-                providers: [
-                  //map marker provider, this really could be somewhere else
-                  ChangeNotifierProvider(
-                      create: (context) => MarkerPopupModel()),
-                  //todo:decide where to put these later
-                  //auth provider
-                  StreamProvider<User>.value(
-                      value: FirebaseAuth.instance.authStateChanges()),
-                  //posts provider
-                  StreamProvider<List<Post>>.value(value: db.streamPosts()),
-                  StreamProvider<List<Profile>>.value(
-                      value: db.streamProfilesInRadius(
-                          radius: 50, currentLocation: snapshot.data)),
-                  StreamProvider<List<ChatSession>>(
-                    create: (_) => db.streamChatSessions(uid),
-                  )
-                ],
-                child: MaterialApp(
-                    title: 'Flutter Demo',
-                    theme: ThemeData(
-                      primarySwatch: _color,
-                      visualDensity: VisualDensity.adaptivePlatformDensity,
-                    ),
-                    // home: NavigationController(),
-                    home: NavigationController(),
-                    routes: <String, WidgetBuilder>{
-                      //named routes
-                      '/home': (BuildContext context) => NavigationController(),
-                      '/login': (BuildContext context) => LoginPage(),
-                      '/chatPage': (BuildContext context) => ChatPage(),
-                      '/map': (BuildContext context) => MapPage(),
-                    })
-            );
-          }
-
-          return Container(
-            alignment: Alignment.center,
-              child: Text("need location data to work properly", textDirection:TextDirection.ltr),
-            //return page with limited functionality, return map to manually set coordinates
-          );
-        }
-    );
+    return MultiProvider(
+        providers: [
+          //map marker provider, this really could be somewhere else
+          ChangeNotifierProvider(create: (context) => MarkerPopupModel()),
+          //todo:decide where to put these later
+          //auth provider
+          StreamProvider<User>.value(
+              value: FirebaseAuth.instance.authStateChanges()),
+          //have to rewrite these
+          StreamProvider<List<Post>>.value(value: db.streamPosts()),
+          StreamProvider<List<Profile>>.value(
+              value: db.streamProfilesInRadius(
+                  radius: 50, currentLocation: location)),
+          StreamProvider<List<ChatSession>>(
+            create: (_) => db.streamChatSessions(uid),
+          )
+        ],
+        child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: _color,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            // home: NavigationController(),
+            home: NavigationController(),
+            routes: <String, WidgetBuilder>{
+              //named routes
+              '/home': (BuildContext context) => NavigationController(),
+              '/login': (BuildContext context) => LoginPage(),
+              '/chatPage': (BuildContext context) => ChatPage(),
+              '/map': (BuildContext context) => MapPage(),
+            }));
   }
 }

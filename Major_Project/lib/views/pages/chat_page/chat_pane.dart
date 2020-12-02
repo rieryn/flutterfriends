@@ -132,7 +132,7 @@ class ChatPaneState extends State<ChatPane> {
       height: 50.0,
       decoration: BoxDecoration(
           border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
-          color: Theme.of(context).accentColor),
+          color: Theme.of(context).backgroundColor),
     );
   }
 }

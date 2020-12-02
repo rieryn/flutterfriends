@@ -38,6 +38,9 @@ class _NavigationControllerState extends State<NavigationController> {
 
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
+        iconSize: MediaQuery.of(context).size.height/35,
+        unselectedFontSize: MediaQuery.of(context).size.height/90,
+        selectedFontSize: MediaQuery.of(context).size.height/70,
         onTap: (int index) => setState(() => _selectedIndex = index),
         currentIndex: selectedIndex,
         //home tabs
@@ -71,7 +74,7 @@ class _NavigationControllerState extends State<NavigationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
+        bottomNavigationBar: SizedBox(height: MediaQuery.of(context).size.height/14, child:_bottomNavigationBar(_selectedIndex)),
     body: PageStorage(
     child: pages[_selectedIndex],
     bucket: bucket,

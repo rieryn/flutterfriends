@@ -12,7 +12,7 @@ import 'package:major_project/models/chat_message_model.dart';
 import 'package:major_project/models/profile_model.dart';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
-import 'package:major_project/services/location_services.dart';
+import 'package:major_project/services/location_service.dart';
 
 class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -75,6 +75,7 @@ class FirebaseService {
 
   //query profiles within radius of current location
   Stream<List<Profile>> streamProfilesInRadius({double radius, LocationData currentLocation}) {
+    if(currentLocation==null){return null;}
     GeoFirePoint center = geo.point(
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude);
