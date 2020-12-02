@@ -1,35 +1,36 @@
 
 import 'dart:async';
-import 'dart:async';
 import 'dart:core';
 
-import 'package:clippy_flutter/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:major_project/models/chat_session_model.dart';
 import 'package:major_project/models/chat_message_model.dart';
 import 'package:major_project/models/profile_model.dart';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
+import 'package:major_project/services/location_services.dart';
 
 class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final geo = Geoflutterfire();
   final String postCollectionReference = 'posts';
   final String profileCollectionReference = 'profiles';
-
+  final String chatSessionCollectionReference = 'chatSessions';
+  final String profileChatsCollectionReference = 'userChatSessions';
   Stream<Post> streamPost(String id) {
     return _db
-        .collection('posts')
+        .collection(postCollectionReference)
         .doc(id)
         .snapshots()
         .map((snap) => Post.fromFirestore(snap));
   }
 
   Stream<List<Post>> streamPosts() {
-    var ref = _db.collection('posts');
+    var ref = _db.collection(postCollectionReference);
 
     return ref.snapshots().map((list) =>
         list.docs.map((doc) => Post.fromFirestore(doc)).toList());
@@ -40,7 +41,7 @@ class FirebaseService {
   Future<void> addPost(
       {String username, String body, String userImgURL, String postImgURL, String uid, LatLng location}) {
     return _db
-        .collection('posts')
+        .collection(postCollectionReference)
         .doc()
         .set({
       "username": username ?? '',
@@ -57,7 +58,7 @@ class FirebaseService {
   //getone
   Stream<Profile> streamProfile(String id) {
     return _db
-        .collection('profiles')
+        .collection(profileCollectionReference)
         .doc(id)
         .snapshots()
         .map((snap) => Profile.fromFirestore(snap));
@@ -65,8 +66,7 @@ class FirebaseService {
 
   //getall
   Stream<List<Profile>> streamProfiles() {
-    var ref = _db.collection('profiles');
-
+    var ref = _db.collection(profileCollectionReference);
     return ref.snapshots().map((list) =>
         list.docs.map(
                 (doc) => Profile.fromFirestore(doc)
@@ -75,9 +75,10 @@ class FirebaseService {
 
   //query within radius
   // Create a geoFirePoint
-  Stream<List<DocumentSnapshot>> getProfilesInRadius(double radius) {
+  Stream<List<DocumentSnapshot>> getProfilesInRadius(double radius, LocationData currentLocation) {
     GeoFirePoint center = geo.point(
-        latitude: 12.960632, longitude: 77.641603); //todo:change to curr loc
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude);
     Stream<List<DocumentSnapshot>> stream;
     double radius = 50;
     String field = 'position';
@@ -91,7 +92,7 @@ class FirebaseService {
   //add user
   Future<void> addProfile(
       {String uid, String username, String profileImgURL, LatLng location}) {
-    return _db.collection('profiles')
+    return _db.collection(profileCollectionReference)
         .doc(uid)
         .set({
       "username": username ?? 'Anonymous',
@@ -103,7 +104,7 @@ class FirebaseService {
 
   //get profile
   Future<Profile> getProfile({String uid}) async {
-    var snap = await _db.collection('profiles')
+    var snap = await _db.collection(profileCollectionReference)
         .doc(uid)
         .get();
     return Profile.fromFirestore(snap);
@@ -111,7 +112,7 @@ class FirebaseService {
 
   //update profile
   Future<void> updateProfileUsername({String uid, String username}) {
-    return _db.collection('profiles')
+    return _db.collection(profileCollectionReference)
         .doc(uid)
         .set({
       "username": username ?? 'Anonymous'
@@ -121,46 +122,82 @@ class FirebaseService {
   //every method calling imgurl needs to check null
   //update profile image
   Future<void> updateProfileImage({String uid, String profileImgURL}) {
-    return _db.collection('profiles')
+    return _db.collection(profileCollectionReference)
         .doc(uid)
         .set({
       "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300'
     });
   }
-
   //chat services
-  Future<ChatSession> getChatSession(String sessionId) async {
-    var snap = await _db.collection('chatSessions')
-        .doc(sessionId)
-        .get();
-    return ChatSession.fromFirestore(snap);
+  //stream chat sessions of user, listen to this to get new chats
+  Stream<List<ChatSession>> streamChatSessions(String uid) {
+    var ref = _db.collection(profileCollectionReference)
+        .doc(uid)
+        .collection(profileChatsCollectionReference);
+    return ref.snapshots().map((list) =>
+        list.docs.map(
+                (doc) => ChatSession.fromFirestore(doc)
+        ).toList());
   } //todo: put list of chatsessions in profile and in local storage
   //sessionids are always uid+uid, cache these locally
-  Future<String> guessChatSessionId(String uid1, String uid2) async {
-    var doc = await _db.collection('chatSessions')
+  Future<String> guessChatSessionId(
+      String uid1,
+      String uid2,
+      String user1ImageURL,
+      String user2ImageURL,
+      String user1Username,
+      String user2Username) async {
+    var doc = await _db.collection(chatSessionCollectionReference)
         .doc(uid1 + uid2).get();
-    if (!doc.exists) {return uid1+uid2;}
+    if (doc.exists) {return uid1+uid2;}
     else{
-      doc = await _db.collection('chatSessions')
+      doc = await _db.collection(chatSessionCollectionReference)
           .doc(uid2+uid1).get();
-      if (!doc.exists) {return uid2+uid1;}
+      if (doc.exists) {return uid2+uid1;}
       print('failed to get chat session');
-      return createChatSession(uid1, uid2);
+      return createChatSession(uid1, uid2, user1ImageURL, user2ImageURL,user1Username,user2Username);
     }
   }
-  String createChatSession(String uid1, String uid2){
-    _db.collection('chatSessions')
-        .doc(uid1+uid2)
-        .set({
-          "sessionId": uid1+uid2,
-          "user1": uid1,
-          "user2": uid2,
-        });
+  //returns session id, set for both users as well
+  String createChatSession(
+      String uid1,
+      String uid2,
+      String user1ImageURL,
+      String user2ImageURL,
+      String user1Username,
+      String user2Username){
+      _db.collection(chatSessionCollectionReference)
+          .doc(uid1+uid2)
+          .set({
+            "sessionId": uid1+uid2,
+            "user1": uid1,
+            "user2": uid2,
+          });
+      _db.collection(profileCollectionReference)
+          .doc(uid1)
+          .collection(profileChatsCollectionReference)
+          .doc(uid1+uid2)
+          .set({
+            "sessionId": uid1+uid2,
+            "peer": uid2,
+            "peerUsername": user2Username,
+            "peerProfileImageURL": user2ImageURL,
+      });
+      _db.collection(profileCollectionReference)
+          .doc(uid2)
+          .collection(profileChatsCollectionReference)
+          .doc(uid1+uid2)
+          .set({
+            "sessionId": uid1+uid2,
+            "peer": uid1,
+            "peerUsername": user1Username,
+            "peerProfileImageURL": user1ImageURL,
+      });
     return uid1+uid2;
   }
   //stream messages
   Stream<List<ChatMessage>> streamChatMessages(String sessionId, String userId) {
-    var ref = _db.collection('chatSessions')
+    var ref = _db.collection(chatSessionCollectionReference)
         .doc(sessionId)
         .collection('messages');
 
@@ -169,6 +206,19 @@ class FirebaseService {
                 (doc) => ChatMessage.fromFirestore(doc, userId)
         ).toList());
   }
-
+  pushMessage({String sessionId, User user, bool isImage, String body}) {
+    _db.collection(chatSessionCollectionReference)
+        .doc(sessionId)
+        .collection('messages')
+        .add({
+          "userId": user.uid ?? '',
+          "username": user.displayName ?? '',
+          "body": body ?? '',
+          "userImgURL": user.photoURL ?? 'http://placekitten.com/200/300',
+          "foreignUser": false,
+          "isImage": isImage ?? false,
+          "createdDate": Timestamp.now() ?? 0,
+        });
+  }
 
 }

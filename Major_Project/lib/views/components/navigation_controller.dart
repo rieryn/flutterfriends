@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:major_project/views/pages/chat_page/chat_page.dart';
 import 'package:major_project/views/pages/home_page/home_page.dart';
 import 'package:major_project/views/pages/live%20chat/live_chat_page.dart';
 import 'package:major_project/views/pages/map_page.dart';
@@ -13,7 +14,7 @@ class _NavigationControllerState extends State<NavigationController> {
   // storage keys allow the pages to not be reloaded every set state and retain their scroll position
   final List<Widget> pages = [
     HomePage(key: PageStorageKey('home_page')),
-    PeoplePage(key: PageStorageKey('people_page')),
+    ChatPage(key: PageStorageKey('chat_page')),
     MapPage(key: PageStorageKey('map_page')),
     LiveChatPage(key: PageStorageKey('live_chat_page')),
   ];
@@ -29,25 +30,25 @@ class _NavigationControllerState extends State<NavigationController> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            label: 'Home',
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // people tab
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
-            title: Text('People'),
+            label: 'connections',
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // map tab
           BottomNavigationBarItem(
             icon: Icon(Icons.location_on_outlined),
-            title: Text('explore'),
+            label: 'explore',
             backgroundColor: Theme.of(context).primaryColor,
           ),
           // live chat app
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            title: Text('Live Chat'),
+            label: 'Live Chat',
             backgroundColor: Theme.of(context).primaryColor,
           ),
         ],

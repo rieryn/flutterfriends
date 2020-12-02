@@ -11,23 +11,26 @@ import 'user_comment_model.dart';
 
 class ChatSession {
   final String sessionId;
-  final String user1UID;
-  final String user2UID;
+  final String peerUID;
+  final String peerUsername;
+  final String peerProfileImageURL;
 
 
   ChatSession({
     //firebase docReference
     this.sessionId,
-    this.user1UID,
-    this.user2UID,
+    this.peerUID,
+    this.peerUsername,
+    this.peerProfileImageURL,
     //subcollection messages
   });
   factory ChatSession.fromFirestore(DocumentSnapshot doc) {
     print(doc);
     return ChatSession(
         sessionId: doc.id,
-        user1UID: doc['user1UID']?? '',
-        user2UID: doc['user2UID'] ?? ''
+        peerUID: doc['peerUID']?? '',
+        peerUsername: doc['peerUsername']?? '',
+        peerProfileImageURL: doc['peerProfileImageURL'] ?? ''
     );
   }
 }

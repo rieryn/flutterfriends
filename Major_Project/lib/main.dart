@@ -6,10 +6,12 @@ import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
 import 'package:major_project/services/localdb/sqlite_services.dart';
 import 'package:major_project/views/components/navigation_controller.dart';
+import 'package:major_project/views/pages/chat_page/chat_page.dart';
 import 'package:major_project/views/pages/login_page.dart';
 import 'package:major_project/views/pages/map_page.dart';
 import 'package:provider/provider.dart';
 
+import 'models/chat_session_model.dart';
 import 'models/markerpopup_model.dart';
 import 'models/post_model.dart';
 import 'models/profile_model.dart';
@@ -65,6 +67,7 @@ class _MyAppState extends State<MyApp> {
                   StreamProvider<User>.value(value: FirebaseAuth.instance.authStateChanges()),
                   //posts provider
                   StreamProvider<List<Post>>.value(value: db.streamPosts()),
+
                 ],
                 child: MaterialApp(
                 //builds app only is connection works
@@ -79,7 +82,7 @@ class _MyAppState extends State<MyApp> {
                   //named routes
                   '/home': (BuildContext context) => NavigationController(),
                   '/login': (BuildContext context) => LoginPage(),
-
+                  '/chatPage': (BuildContext context) => ChatPage(),
                   '/map':(BuildContext context) => MapPage(),
                 })
             );
