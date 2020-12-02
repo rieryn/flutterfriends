@@ -10,10 +10,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/models/profile_model.dart';
+import 'package:major_project/services/firestore_services.dart';
 import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
+import 'package:major_project/views/components/profile_card.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
+
+import 'chat_page/chat_page.dart';
+import 'home_page/home_page.dart';
 //(0,0) is in ukraine just fyi
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
@@ -22,7 +27,9 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  String sessionId;
   final AsyncMemoizer _memoizer = AsyncMemoizer();
+  final _db = FirebaseService();
   GoogleMapController mapController;
   BitmapDescriptor testuserIcon; //todo
   BitmapDescriptor messageicon;
@@ -57,7 +64,7 @@ class _MapPageState extends State<MapPage> {
   }
   //todo: get curr state
   final LatLng _center = LatLng(43.897095, -78.865791);
-  final double _zoom = 15.0;
+  final double _zoom = 5.0;
   final Map<String, Profile> _testUsers = {
     'test': Profile(
       profileId: "documentid",
@@ -132,10 +139,6 @@ class _MapPageState extends State<MapPage> {
     var whatever = zip([locations, cases]).toList();
     //looks something like  ( ([lat lng time], cases), ...)
     whatever.forEach((e) {
-      print(e);
-      print(e.last);
-      print(e.first[0]);//lmao
-      print(e.first[0].longitude);
       _setCircle(LatLng(e.first[0].latitude, e.first[0].longitude), int.parse(e.last));
     });
 
@@ -162,13 +165,10 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
+    User user = Provider.of<User>(context,listen:false);
     setPostMarkers(testuserIcon);
-    print(CovidDB.instance.tableCoordinates);
-    print(CovidDB.instance.caseList);
     _setCovidOverlay(CovidDB.instance.tableCoordinates,CovidDB.instance.caseList);
 
-    print(_markers);
-    print(messageicon);
 
     _testPosts.forEach(
           (k, v) => _markers.add(
@@ -194,7 +194,6 @@ class _MapPageState extends State<MapPage> {
         ),
       ),
     );
-    print(_markers);
 
     _testUsers.forEach(
           (k, v) => _markers.add(
@@ -220,7 +219,6 @@ class _MapPageState extends State<MapPage> {
         ),
       ),
     );
-    print(_markers);
 
     return Scaffold(
       appBar: AppBar(
@@ -269,25 +267,24 @@ class _MapPageState extends State<MapPage> {
 
                         )
                             :Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.white,
-                                  offset: Offset(1.0, 1.0),
-                                ),
-                              ],
-                            ),
-                            height: 100,
-                            width: 250,
-                            padding: EdgeInsets.all(15),
-                            child: ListTile(
-                              leading: FlutterLogo(),
-                              title: Text(providerObject.profile.username),
-                              trailing: Icon(Icons.more_vert),
-                            )
-
-                        )
+                          height: 100,
+                          width:250,
+                          child: InkWell(child:ProfileCard( providerObject.profile),
+                                onTap: () =>   {
+                                  /*if (sessionId == null)
+                                    {
+                                      sessionId = await _db.guessChatSessionId(
+                                          user.uid,
+                                          providerObject.profile.profileId,
+                                          user.photoURL,
+                                          providerObject.profile.profileImgURL,
+                                          user.displayName,
+                                          providerObject.profile.username)
+                                    },*/Navigator.pushNamed(context, '/chatPage'),
+                                    print('clicked')
+                                  }
+                          ),
+                        ),
                     ),
                   ),
                 ),

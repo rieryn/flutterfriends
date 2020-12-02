@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:major_project/services/firebase_authentication.dart';
 import 'package:major_project/services/firestore_services.dart';
+import 'package:major_project/views/components/navigation_controller.dart';
 import 'package:major_project/views/components/sign_up_popup.dart';
 import 'package:major_project/views/components/username_dialog.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
               password:_password);
           //auth stream should return user now
           final _username = await UsernameDialog.getUsername(context);//todo: try to pass in username
-          _db.addProfile(uid:_user.uid, username: _username, profileImgURL: 'http://placekitten.com/200/300', location: LatLng(0,0));
+          _db.createProfile(uid:_user.uid, username: _username, profileImgURL: 'http://placekitten.com/200/300');
         } on FirebaseAuthException catch(e) {
           if (e.code == 'account-exists-with-different-credential') {
             // The account already exists with a different credential
@@ -196,13 +197,13 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () async {
         try{
           await _auth.signInAnonymously();
-          if (_user.displayName == null){_user.updateProfile(displayName:'Anonymous', photoURL: 'http://placekitten.com/200/300');}
           final _username = await UsernameDialog.getUsername(context);//todo: try to pass in username
-          _db.addProfile(uid: _user.uid, username: _username ?? 'Anonymous', profileImgURL: 'http://placekitten.com/200/300', location: LatLng(0,0));
+          if (_user.displayName == null){_user.updateProfile(displayName:'Anonymous', photoURL: 'http://placekitten.com/200/300');}
+          _db.createProfile(uid: _user.uid, username: _username ?? 'Anonymous', profileImgURL: 'http://placekitten.com/200/300');
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return HomePage();
+                return NavigationController();
               },
             ),
           );

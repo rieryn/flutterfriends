@@ -18,6 +18,7 @@ class UsernameDialog {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextFormField(//can change to validate if you want
                 decoration: new InputDecoration(hintText: "Enter Username"),

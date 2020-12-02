@@ -54,7 +54,7 @@ class FirebaseService {
       "postedDate": Timestamp.now() ?? 0,
     });
   }
-
+/*
   //getone
   Stream<Profile> streamProfile(String id) {
     return _db
@@ -71,51 +71,60 @@ class FirebaseService {
         list.docs.map(
                 (doc) => Profile.fromFirestore(doc)
         ).toList());
-  }
+  }*/
 
-  //query within radius
-  // Create a geoFirePoint
-  Stream<List<DocumentSnapshot>> getProfilesInRadius(double radius, LocationData currentLocation) {
+  //query profiles within radius of current location
+  Stream<List<Profile>> streamProfilesInRadius({double radius, LocationData currentLocation}) {
     GeoFirePoint center = geo.point(
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude);
-    Stream<List<DocumentSnapshot>> stream;
-    double radius = 50;
-    String field = 'position';
-    var collectionReference = _db.collection('profile_locations');
-    stream = geo.collection(collectionRef: collectionReference)
-        .within(center: center, radius: radius, field: field);
-    return stream;
+    Stream<List<DistanceDocSnapshot>> streamSnaps;
+    String field = 'profiles.location.position';
+    var collectionReference = _db.collection('profiles');
+    streamSnaps = geo.collection(collectionRef: collectionReference)
+        .within(
+        center: center,
+        radius: radius ?? 50,
+        field: field);
+    return streamSnaps.map((list) =>
+        list.map(
+                (doc) => Profile.fromFirestore(doc),
+        ).toList());
   }
 
-  //every method calling imgurl needs to check null
-  //add user
-  Future<void> addProfile(
-      {String uid, String username, String profileImgURL, LatLng location}) {
+  //add profile
+  Future<void> createProfile(
+      {String uid, String username, String profileImgURL}) {
     return _db.collection(profileCollectionReference)
         .doc(uid)
         .set({
-      "username": username ?? 'Anonymous',
-      "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300',
-      "location": GeoPoint(location.latitude, location.longitude) ??
-          GeoPoint(0, 0),
+          "username": username ?? 'Anonymous',
+          "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300',
     });
+  }
+  Future<void> updateProfileLocation({String uid, LocationData location}){
+    GeoFirePoint myLocation = geo.point(latitude:location.latitude,longitude:location.longitude);
+    return _db.collection(profileCollectionReference)
+        .doc(uid)
+        .collection('locations')
+        .doc('geofirepoint')
+        .set({'name': 'random name', 'position': myLocation.data});
   }
 
   //get profile
-  Future<Profile> getProfile({String uid}) async {
+  /*Future<Profile> getProfile({String uid}) async {
     var snap = await _db.collection(profileCollectionReference)
         .doc(uid)
         .get();
     return Profile.fromFirestore(snap);
-  }
+  }*/
 
   //update profile
   Future<void> updateProfileUsername({String uid, String username}) {
     return _db.collection(profileCollectionReference)
         .doc(uid)
         .set({
-      "username": username ?? 'Anonymous'
+         "username": username ?? 'Anonymous'
     });
   }
 
@@ -125,7 +134,7 @@ class FirebaseService {
     return _db.collection(profileCollectionReference)
         .doc(uid)
         .set({
-      "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300'
+          "profileImgURL": profileImgURL ?? 'http://placekitten.com/200/300'
     });
   }
   //chat services

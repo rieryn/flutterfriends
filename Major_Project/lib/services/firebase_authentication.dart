@@ -81,9 +81,15 @@ Future<void> firebaseAuthErrorHandling(FirebaseAuthException e) async {
 }
 void createUserSuccess(context) async{
   final _user = Provider.of<User>(context);
-  final _username =  await UsernameDialog.getUsername(context);
-  if (_user.displayName == null){_user.updateProfile(displayName:'Anonymous', photoURL: 'http://placekitten.com/200/300');}
-  _db.addProfile(uid: _user.uid, username: _username ?? 'Anonymous', profileImgURL: 'http://placekitten.com/200/300', location: LatLng(0,0));
+  final _username = await UsernameDialog.getUsername(context);
+  if (_user.displayName == null) {
+    _user.updateProfile(
+        displayName: 'Anonymous', photoURL: 'http://placekitten.com/200/300');
+  }
+  _db.createProfile(
+      uid: _user.uid,
+      username: _username ?? 'Anonymous',
+      profileImgURL: 'http://placekitten.com/200/300');
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:major_project/services/firestore_services.dart';
+import 'package:major_project/views/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:major_project/models/chat_session_model.dart';
@@ -32,32 +33,38 @@ class ChatPageState extends State<ChatPage> {
   void initState() {
     if(sessionId == null){getCurrentSession();}
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<ChatSession>>.value(
-        value: _db.streamChatSessions(user.uid),
+    print(sessionId);
+    user = Provider.of<User>(context);
+    if (user != null) {
+      return StreamProvider<List<ChatSession>>(
+        create: (_)=> _db.streamChatSessions(user.uid),
         child: Scaffold(
-                drawer: Drawer(
-                    child: chatListDrawer()
-                    ),
-                appBar: AppBar(
-                    title: Text(
-                      'chat page',
-                      style: TextStyle(
-                          color: Colors.black38,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    centerTitle: true,
-                  ),
-                body: ChatPane(
-                    peerUID: peerUID,
-                    peerProfileImageURL: peerProfileImageURL,
-                    sessionId: sessionId,
-                  ),
-                ),
-    );
+          drawer: Drawer(
+              child: chatListDrawer()
+          ),
+          appBar: AppBar(
+            title: Text(
+              'chat page',
+              style: TextStyle(
+                  color: Colors.black38,
+                  fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+          ),
+          body: ChatPane(
+            peerUID: peerUID,
+            peerProfileImageURL: peerProfileImageURL,
+            sessionId: sessionId,
+          ),
+        ),
+      );
+    }
+    return LoginPage();
   }
 
   Widget chatListDrawer(){
@@ -72,9 +79,11 @@ class ChatPageState extends State<ChatPage> {
                 ),
               title: Text(value.peerUsername),
               onTap: () => {peerUID = value.peerUID,
-                            sessionId = value.sessionId,
-                            peerProfileImageURL = value.peerProfileImageURL,
+                            sessionId = value.sessionId,                print(sessionId),
+
+                peerProfileImageURL = value.peerProfileImageURL,
                             prefs.setString('sessionId', value.sessionId),
+                            prefs.setString('peerId', value.peerUID),
                             setState((){}),
                             Navigator.pop(context)},
                 );

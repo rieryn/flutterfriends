@@ -40,17 +40,10 @@ class AddPostBottomsheet extends StatelessWidget {
     final _db = FirebaseService();
     var _user = Provider.of<User>(context, listen: false);
     bool loggedIn = _user != null;
-    Profile _profile;
     String _imageURL = 'http://placekitten.com/200/300';
     String _post;
 
     if(loggedIn){
-      (FirebaseService()
-          .getProfile(uid: _user.uid))
-          .then((value){
-            _profile = value;
-            _imageURL = _profile.profileImgURL;}
-          );//todo: make a provider
     return Container(
       color: Color(0xFF737373),
       child: Container(
@@ -157,7 +150,7 @@ class AddPostBottomsheet extends StatelessWidget {
                   ),
                   color: Colors.blue,
                   onPressed: () {
-                    Navigator.pushNamed(context, 'login');
+                    Navigator.pushNamed(context, '/login');
                   },
                 ),
               ],

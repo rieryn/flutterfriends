@@ -18,16 +18,11 @@ class ChatPane extends StatefulWidget {
       : super(key: key);
 
   @override
-  State createState() =>
-      ChatPaneState(peerUID: peerUID, peerProfileImageURL: peerProfileImageURL);
+  State createState() => ChatPaneState();
 }
 
 class ChatPaneState extends State<ChatPane> {
-  ChatPaneState({Key key, @required this.peerUID, @required this.peerProfileImageURL, @required this.sessionId});
   final _db = FirebaseService();
-  String peerUID;
-  String peerProfileImageURL;
-  String sessionId;
   User _user;
   SharedPreferences prefs;
 
@@ -35,7 +30,6 @@ class ChatPaneState extends State<ChatPane> {
 
   @override
   void initState() {
-    _user = Provider.of<User>(context);
     super.initState();
   }
   @override
@@ -46,7 +40,7 @@ class ChatPaneState extends State<ChatPane> {
   void pushMessage(String message) {
       textController.clear();
       _db.pushMessage(
-        sessionId: sessionId,
+        sessionId: widget.sessionId,
         user: _user,
         isImage: false,
         body: message,
@@ -55,6 +49,8 @@ class ChatPaneState extends State<ChatPane> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.sessionId);
+    _user = Provider.of<User>(context);
     return Stack(
       children: <Widget>[
         Column(
@@ -69,12 +65,12 @@ class ChatPaneState extends State<ChatPane> {
 
   Widget messageListView() {
     return Expanded(
-      child: sessionId == null ?
+      child: widget.sessionId == null ?
             Center(
           child: Text("No messages :("),
             )
           : StreamBuilder(
-              stream: _db.streamChatMessages(sessionId, _user.uid),
+              stream: _db.streamChatMessages(widget.sessionId, _user.uid),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();}
@@ -82,7 +78,7 @@ class ChatPaneState extends State<ChatPane> {
                     padding: EdgeInsets.all(10.0),
                     itemBuilder: (context, index) =>
                         messageTile(snapshot.data[index]),
-                    itemCount: 20,
+                    itemCount: snapshot.data.length,
                     reverse: true,
                 );
              }

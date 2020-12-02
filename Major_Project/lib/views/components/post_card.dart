@@ -12,14 +12,10 @@ class PostComponent extends StatelessWidget{
   Widget build(BuildContext context) {
     var user = Provider.of<User>(context);
     bool loggedIn = user != null;
-    if(_post !=null){
       return Card(
           child: ListTile(
             leading: Text(_post.body),
           )
         //todo:something something on button pressed if logged in update likes else navigate to login/signup
       );}
-
-      throw UnimplementedError();
-    }
 }

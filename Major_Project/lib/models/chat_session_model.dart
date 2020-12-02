@@ -26,11 +26,12 @@ class ChatSession {
   });
   factory ChatSession.fromFirestore(DocumentSnapshot doc) {
     print(doc);
+    Map<String, dynamic> data = doc.data();
     return ChatSession(
         sessionId: doc.id,
-        peerUID: doc['peerUID']?? '',
-        peerUsername: doc['peerUsername']?? '',
-        peerProfileImageURL: doc['peerProfileImageURL'] ?? ''
+        peerUID: data['peerUID']?? '',
+        peerUsername: data['peerUsername']?? '',
+        peerProfileImageURL: data['peerProfileImageURL'] ?? ''
     );
   }
 }

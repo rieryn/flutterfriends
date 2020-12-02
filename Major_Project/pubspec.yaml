@@ -49,7 +49,7 @@ dependencies:
   json_serializable: ^3.3.0
   device_info: ^0.4.2+4
   geoflutterfire:
-    git: git://github.com/DarshanGowda0/GeoFlutterFire.git
+    git: https://github.com/rieryn/GeoFlutterFire #modified from https://github.com/DarshanGowda0/GeoFlutterFire/
   location: ^3.0.0 #check help page for ios compatibility
   #FREE geocoding
   geocoding:

@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
               label: Text("create new post..."),
               backgroundColor: Colors.green,//try to make it look like bottomsheet
               onPressed: () async {
-                var user = Provider.of<User>(context, listen: true);
+                var user = Provider.of<User>(context, listen: false);
                 bool loggedIn = user != null;
                 if(loggedIn){ //bring up addpost
                   showModalBottomSheet(

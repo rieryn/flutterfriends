@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:major_project/models/chat_session_model.dart';
+import 'package:major_project/services/firestore_services.dart';
 import 'package:major_project/views/pages/chat_page/chat_page.dart';
 import 'package:major_project/views/pages/home_page/home_page.dart';
 import 'package:major_project/views/pages/live%20chat/live_chat_page.dart';
 import 'package:major_project/views/pages/map_page.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/people_page.dart';
 
 class NavigationController extends StatefulWidget {
@@ -11,6 +15,18 @@ class NavigationController extends StatefulWidget {
 }
 
 class _NavigationControllerState extends State<NavigationController> {
+  final PageStorageBucket bucket = PageStorageBucket();
+  final _db = FirebaseService();
+  int _selectedIndex = 0;
+  SharedPreferences prefs;
+  String sessionId;
+  String peerUID;
+
+  @override
+  void initState() {
+    getCurrentSession();
+    super.initState();
+  }
   // storage keys allow the pages to not be reloaded every set state and retain their scroll position
   final List<Widget> pages = [
     HomePage(key: PageStorageKey('home_page')),
@@ -19,9 +35,7 @@ class _NavigationControllerState extends State<NavigationController> {
     LiveChatPage(key: PageStorageKey('live_chat_page')),
   ];
 
-  final PageStorageBucket bucket = PageStorageBucket();
 
-  int _selectedIndex = 0;
 
   Widget _bottomNavigationBar(int selectedIndex) => BottomNavigationBar(
         onTap: (int index) => setState(() => _selectedIndex = index),
@@ -56,13 +70,20 @@ class _NavigationControllerState extends State<NavigationController> {
 
   @override
   Widget build(BuildContext context) {
-    print(DateTime.now().toString());
     return Scaffold(
-      bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
-      body: PageStorage(
-        child: pages[_selectedIndex],
-        bucket: bucket,
-      ),
+        bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
+    body: PageStorage(
+    child: pages[_selectedIndex],
+    bucket: bucket,
+    ),
     );
+    print(DateTime.now().toString()
+    );
+
+  }
+  getCurrentSession() async {
+    prefs = await SharedPreferences.getInstance();
+    sessionId = prefs.getString('sessionId') ?? '';
+    peerUID = prefs.getString('peerUID') ?? '';
   }
 }
