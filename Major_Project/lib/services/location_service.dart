@@ -35,7 +35,6 @@ class LocationService {
       Location location = new Location();
       LocationData _locationData;
       _locationData = await location.getLocation();
-      controller.add(currentLocation.toString());
       currentLocation =_locationData;
       _streamController.add(_locationData);
       print(_streamController.hasListener);

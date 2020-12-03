@@ -30,7 +30,7 @@ class _NavigationControllerState extends State<NavigationController> {
   // storage keys allow the pages to not be reloaded every set state and retain their scroll position
   final List<Widget> pages = [
     HomePage(key: PageStorageKey('home_page')),
-    ChatPage(key: PageStorageKey('chat_page')),
+    ChatPage(key: PageStorageKey('chat_page'),),
     MapPage(key: PageStorageKey('map_page')),
     LiveChatPage(key: PageStorageKey('live_chat_page')),
   ];

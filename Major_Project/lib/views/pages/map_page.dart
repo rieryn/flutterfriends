@@ -13,6 +13,7 @@ import 'package:major_project/models/profile_model.dart';
 import 'package:major_project/services/firestore_services.dart';
 import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
+import 'package:major_project/services/utils.dart';
 import 'package:major_project/views/components/profile_card.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
@@ -30,41 +31,18 @@ class _MapPageState extends State<MapPage> {
   String sessionId;
   final AsyncMemoizer _memoizer = AsyncMemoizer();
   final _db = FirebaseService();
+  final double _zoom = 5.0;
+  LatLng _center = LatLng(43.897095, -78.865791);
   GoogleMapController mapController;
   BitmapDescriptor testuserIcon; //todo
   BitmapDescriptor messageicon;
   List<Post> posts;
+  int _counter=0;
+
   @override
   void initState() {
-
     super.initState();
-    var v = _fetchBunny();
-    print(v);
-    getBytesFromAsset('assets/message.png', 128).then((onValue) {
-      messageicon =BitmapDescriptor.fromBytes(onValue);print(testuserIcon);}
-      );
-    print(testuserIcon);
-    print("is init running before");
-    print('wtf is in memoizer');
-    print(_memoizer);
   }
-  _fetchBunny() {
-    return this._memoizer.runOnce(() async {
-      print('fetch bunny running');
-      var val = await getBytesFromAsset('assets/bunny.jpg', 128);
-        testuserIcon =BitmapDescriptor.fromBytes(val);
-      return val;
-    });  }
-  //to bytestream
-  static Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
-  }
-  //todo: get curr state
-  final LatLng _center = LatLng(43.897095, -78.865791);
-  final double _zoom = 5.0;
   final Map<String, Profile> _testUsers = {
     'test': Profile(
       profileId: "documentid",
@@ -73,18 +51,9 @@ class _MapPageState extends State<MapPage> {
       location: LatLng(43.897095, -78.865791),
     ),
   };
-  final Map<String, Post> _testPosts = {
-    /*  "p1": Post(
-      postid:"docid",
-      user:"bunny",
-      desc:"test",
-      userimg:"https://via.placeholder.com/150",
-      location:LatLng(43.897095, -78.86225791),
-    ),*/
-  };
-
   final double _infoWindowWidth = 250;
   final double _popupOffset = 170;
+  Set<Marker> _markers = Set<Marker>();
   List<Marker> addMarkers(snaps, markersList) {
     for (int i = 0; i < snaps.length; ++i) {
       markersList.add(Marker(
@@ -93,8 +62,6 @@ class _MapPageState extends State<MapPage> {
       ));
     }
   }
-
-  Set<Marker> _markers = Set<Marker>();
   void setPostMarkers(BitmapDescriptor messageicon){
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
     final postsList = Provider.of<List<Post>>(context);
@@ -125,25 +92,46 @@ class _MapPageState extends State<MapPage> {
             )
         )});
     };
+  }
+  void setProfileMarkers(BitmapDescriptor userIcon){
+    final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
+    final profileList = Provider.of<List<Profile>>(context);
+    if(profileList !=null) {
+      _markers.clear();
+      profileList.forEach((v) =>
+      {
+        _markers.add(
+            Marker(
+              markerId: MarkerId(v.profileId),
+              position: v.location,
+              icon: MarkerBitmapper.instance.messageIcon,
 
+              onTap: () {
+                providerObject.updatePopup(
+                  context,
+                  mapController,
+                  v.location,
+                  _infoWindowWidth,
+                  _popupOffset,
+                );
+                providerObject.updatePost(null);
+                providerObject.updateProfile(v);
+                providerObject.updateVisibility(true);
+                providerObject.rebuild();
+                print(providerObject);
+              },
+            )
+        )});
+    };
   }
-  int _counter=0;
   Set<Circle> _circles = Set<Circle>();
-  Iterable zip(Iterable<Iterable> iterables) {
-    var minLength = iterables.map((a) => a.length).reduce((a, b) => a < b ? a : b);
-    return new Iterable.generate(minLength, (i) => iterables.map((it) => it.elementAt(i)));
-  }
   void _setCovidOverlay(List<List<Location>> locations, List<String> cases){
     //probably breaks if they're not same length? please refactor
-
     var whatever = zip([locations, cases]).toList();
     //looks something like  ( ([lat lng time], cases), ...)
     whatever.forEach((e) {
       _setCircle(LatLng(e.first[0].latitude, e.first[0].longitude), int.parse(e.last));
     });
-
-
-
   }
   void _setCircle(LatLng location, int cases){ //if i have to put markers or the whole widget thing to get labels again i might as well use markers
     final String circleid = 'circle_id_$_counter';
@@ -159,7 +147,6 @@ class _MapPageState extends State<MapPage> {
     )
     );
     return;
-
   }
 
   @override
@@ -168,32 +155,6 @@ class _MapPageState extends State<MapPage> {
     User user = Provider.of<User>(context,listen:false);
     setPostMarkers(testuserIcon);
     _setCovidOverlay(CovidDB.instance.tableCoordinates,CovidDB.instance.caseList);
-
-
-    _testPosts.forEach(
-          (k, v) => _markers.add(
-        Marker(
-          markerId: MarkerId(v.postid),
-          position: v.location,
-          icon: messageicon,
-
-          onTap: () {
-            providerObject.updatePopup(
-              context,
-              mapController,
-              v.location,
-              _infoWindowWidth,
-              _popupOffset,
-            );
-            providerObject.updatePost(v);
-            providerObject.updateProfile(null);
-            providerObject.updateVisibility(true);
-            providerObject.rebuild();
-            print (providerObject);
-          },
-        ),
-      ),
-    );
 
     _testUsers.forEach(
           (k, v) => _markers.add(

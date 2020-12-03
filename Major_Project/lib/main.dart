@@ -29,23 +29,19 @@ void main() async {
   CovidDB.instance.init();
   await LocationService.instance.init();
   //wrap in localdb init
+
     runApp(
       MultiProvider(
           providers: [
             StreamProvider<User>.value(
               value: FirebaseAuth.instance.authStateChanges()),
-            ChangeNotifierProvider<Settings>(
-              create: (_) => Settings('blueTheme'),
-            ),
             StreamProvider<LocationData>.value(
               value: LocationService.instance.locationStream
             ),
           ],
           child: MyApp(),
       )
-
     );
-  //});
 }
 
 class MyApp extends StatefulWidget {
@@ -54,9 +50,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  //initialize local database to load Theme settings to build the app
   @override
   void initState() {
+    //async load things like bitmap images
     MarkerBitmapper.instance.init();
   }
 
@@ -66,32 +62,25 @@ class _MyAppState extends State<MyApp> {
     String uid;
     if(user != null){uid = user.uid;}
     LocationData location = context.watch<LocationData>();
-    var _color;
     final db = FirebaseService();
     return MultiProvider(
         providers: [
-          //map marker provider, this really could be somewhere else
-          ChangeNotifierProvider(create: (context) => MarkerPopupModel()),
-          //todo:decide where to put these later
-          //auth provider
-          StreamProvider<User>.value(
-              value: FirebaseAuth.instance.authStateChanges()),
-          //have to rewrite these
-          StreamProvider<List<Post>>.value(value: db.streamPosts()),
-          StreamProvider<List<Profile>>.value(
-              value: db.streamProfilesInRadius(
-                  radius: 50, currentLocation: location)),
-          StreamProvider<List<ChatSession>>(
-            create: (_) => db.streamChatSessions(uid),
-          )
+                ChangeNotifierProvider(create: (_)  =>  Settings()),
+                //map marker provider, this really could be somewhere else
+                ChangeNotifierProvider(create: (context) => MarkerPopupModel()),
+                //todo:decide where to put these later
+                //have to rewrite these
+                StreamProvider<List<Post>>.value(value: db.streamPosts()),
+                StreamProvider<List<Profile>>.value(
+                value: db.streamProfilesInRadius(
+                radius: 50, currentLocation: location)),
+                StreamProvider<List<ChatSession>>(
+                create: (_) => db.streamChatSessions(uid),
+                )
         ],
         child: MaterialApp(
             title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: _color,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            ),
-            // home: NavigationController(),
+            theme: context.watch<Settings>().getTheme(),
             home: NavigationController(),
             routes: <String, WidgetBuilder>{
               //named routes

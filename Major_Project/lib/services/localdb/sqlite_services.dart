@@ -1,3 +1,5 @@
+/*
+
 import 'package:flutter/foundation.dart';
 import 'package:major_project/models/settings_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -54,4 +56,4 @@ class SQLiteService
     }
   }
 
-}
+}*/

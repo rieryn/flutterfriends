@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:major_project/models/settings_model.dart';
 import 'package:major_project/services/firestore_services.dart';
 import 'package:major_project/views/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,36 +10,33 @@ import 'package:provider/provider.dart';
 import 'package:major_project/models/chat_session_model.dart';
 import 'chat_pane.dart';
 class ChatPage extends StatefulWidget {
-  String sessionId;
   String peerUID;
   String peerProfileImageURL;
-  User user;
-  ChatPage({Key key, this.sessionId, this.peerUID, this.user})
+  String sessionId;
+  ChatPage({Key key, this.sessionId, this.peerUID, this.peerProfileImageURL})
       : super(key: key);
   @override
-  State createState() =>
-      ChatPageState(sessionId: sessionId, peerUID: peerUID);
+  State createState() => ChatPageState();
 }
 
 class ChatPageState extends State<ChatPage> {
   SharedPreferences prefs;
-  String peerUID = 'bunny';
-  String peerProfileImageURL = 'http://placekitten.com/200/300';
+  String peerUID;
+  String peerProfileImageURL;
   String sessionId;
   User user;
+  Settings settings;
   var _db = FirebaseService();
-  ChatPageState({Key key, this.sessionId, this.peerUID, this.user});
+  ChatPageState({Key key, this.sessionId, this.peerUID, this.peerProfileImageURL});
 
   @override
   void initState() {
-    if(sessionId == null){getCurrentSession();}
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-    print(sessionId);
+    settings = context.watch<Settings>();
     user = Provider.of<User>(context);
     if (user != null) {
       return StreamProvider<List<ChatSession>>(
@@ -57,9 +55,9 @@ class ChatPageState extends State<ChatPage> {
             centerTitle: true,
           ),
           body: ChatPane(
-            peerUID: peerUID,
-            peerProfileImageURL: peerProfileImageURL,
-            sessionId: sessionId,
+            peerUID: widget.peerUID ?? settings.getChatPeer(),
+            peerProfileImageURL: widget.peerProfileImageURL ?? settings.getChatSession(),
+            sessionId: widget.sessionId ?? settings.getChatSession(),
           ),
         ),
       );
