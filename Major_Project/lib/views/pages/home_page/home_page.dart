@@ -32,8 +32,10 @@ class _HomePageState extends State<HomePage> {
 
           ),
           body: CustomScrollView(
+
             slivers: <Widget>[
           const SliverFloatingBar(
+
             trailing: Text("test"),
           pinned: true,
               floating:true,

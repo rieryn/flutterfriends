@@ -125,6 +125,7 @@ class _NavigationControllerState extends State<NavigationController> {
         // SizedBox(height: MediaQuery.of(context).size.height/14, child:_bottomNavigationBar(_selectedIndex)),
         body: SizedBox.expand(
           child: PageView(
+            physics: NeverScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: (index) {
               setState(() => _currentIndex = index);

@@ -130,6 +130,12 @@ class ProfileDrawer extends StatelessWidget{
             Container(
               height: 70,
               color: Colors.pink,
+              child:InkWell(
+                child: ListTile(
+                  title: Text("Logout"),
+                  onTap: () => {FirebaseAuth.instance.signOut()},
+                ),
+              ),
             ),
             Expanded( // add this
               child: Align(

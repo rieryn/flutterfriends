@@ -80,7 +80,7 @@ class AddPostBottomsheet extends StatelessWidget {
                 ),
               ),
               color: Colors.green[50],
-              onPressed: () async {
+              onPressed: ()  async {
                 _imageURL = await pickImageFromGallery(); //todo: popup for image or camera
                 print("adding at location: "+_location.toString());
                 _db.addPost(
@@ -137,5 +137,16 @@ class AddPostBottomsheet extends StatelessWidget {
         )
       );
     }
+  }
+  void _addPost (_location,_db,_user,_post) async{
+     String _imageURL = await pickImageFromGallery(); //todo: popup for image or camera
+    print("adding at location: "+_location.toString());
+    _db.addPost(
+        username: _user.displayName,
+        body: _post?? '',
+        userImgURL: _user.photoURL ?? 'http://placekitten.com/200/300',
+        postImgURL: _imageURL ?? 'http://placekitten.com/200/300',
+        uid: _user.uid,
+        location: LatLng(_location.latitude, _location.longitude) ?? LatLng(0,0));
   }
 }

@@ -22,6 +22,7 @@ import 'models/markerpopup_model.dart';
 import 'models/post_model.dart';
 import 'models/profile_model.dart';
 import 'models/settings_model.dart';
+import 'package:flare_splash_screen/flare_splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,11 +85,12 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
             title: 'Flutter Demo',
             theme: settings.getTheme(),
-            home: AnimatedSplash(
-              imagePath: 'assets/google_logo.png',
-              home: NavigationController(),
-              duration: 2500,
-              type: AnimatedSplashType.StaticDuration,
+            home: SplashScreen.navigate(
+              name: 'assets/intro.flr',
+              loopAnimation:'assets/intro.flr',
+              next: (_) => NavigationController(),
+              until: () => Future.delayed(Duration(seconds: 10)),
+              startAnimation: '1',
             ),
             routes: <String, WidgetBuilder>{
               //named routes

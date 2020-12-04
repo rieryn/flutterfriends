@@ -35,8 +35,8 @@ class _LoginPageState extends State<LoginPage> {
               FlutterLogo(size: 150),
               SizedBox(height: 50),
               SizedBox(
-                width: 100,
-                height: 50,
+                width: 500,
+                height: 80,
                 child: Row(children:[
                   Expanded(child: TextFormField(
                     decoration: const InputDecoration(
@@ -56,10 +56,10 @@ class _LoginPageState extends State<LoginPage> {
                 ]),
               ),
 
-              Row(children:[
+              Expanded(child:Row(children:[
                 _signInButton(_email, _password),
                 _registerButton(_email, _password),
-              ]),
+              ])),
               _googleSignInButton(),
               _guestSignInButton(),
             ],
