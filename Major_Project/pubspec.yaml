@@ -55,10 +55,15 @@ dependencies:
   #state management
   provider:
   meta:
-  flutter_hooks: ^0.15.0
   rxdart: ^0.24.1
   #flame!
   flame:
+  #ui/react clone things
+  animations: ^1.1.2
+  bottom_navy_bar: ^5.6.0
+  floating_search_bar: ^0.3.0
+  flutter_hooks: ^0.15.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

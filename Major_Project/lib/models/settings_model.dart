@@ -13,15 +13,18 @@ class Settings with ChangeNotifier {
   ThemeData _themeData;
   String _mapTheme;
   String _peerProfileImageURL;
+  String _queryRadius;
   //todo: more settings
   Settings(){
     init();
   }
   void init () async {
     _prefs = await SharedPreferences.getInstance();
-    this._themeData =  parseTheme(_prefs.getString('theme'));
-    this._currentChatSession = _prefs.getString('currentChatSession');
-    this._currentChatPeer = _prefs.getString('currentChatPeer');
+    this._themeData =  parseTheme(_prefs.getString('theme')) ?? blueTheme;
+    this._currentChatSession = _prefs.getString('currentChatSession') ?? null;
+    this._currentChatPeer = _prefs.getString('currentChatPeer') ?? null;
+    this._peerProfileImageURL = _prefs.getString('currentChatImageURL') ?? null;
+    this._queryRadius = _prefs.getString('queryRadius');
     this._mapTheme = _prefs.getString('mapTheme');
     notifyListeners();
   }
@@ -30,7 +33,13 @@ class Settings with ChangeNotifier {
   getChatPeer() => _currentChatPeer;
   getMapTheme() => _mapTheme;
   getTheme() => _themeData;
+  getQueryRadius() => _queryRadius;
 
+  saveQueryRadius(String radius) async {
+    _queryRadius = radius;
+    await _prefs.setString('queryRadius', _queryRadius);
+    notifyListeners();
+  }
   saveTheme(String theme) async {
     _theme = theme;
     _themeData = parseTheme(theme);

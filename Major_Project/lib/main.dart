@@ -7,7 +7,6 @@ import 'package:major_project/services/location_service.dart';
 import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
 import 'package:major_project/services/firestore_services.dart';
-import 'package:major_project/services/location_services.dart';
 import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
 import 'package:major_project/services/localdb/sqlite_services.dart';
@@ -64,23 +63,24 @@ class _MyAppState extends State<MyApp> {
     LocationData location = context.watch<LocationData>();
     final db = FirebaseService();
     return MultiProvider(
-        providers: [
-                ChangeNotifierProvider(create: (_)  =>  Settings()),
-                //map marker provider, this really could be somewhere else
-                ChangeNotifierProvider(create: (context) => MarkerPopupModel()),
-                //todo:decide where to put these later
-                //have to rewrite these
-                StreamProvider<List<Post>>.value(value: db.streamPosts()),
-                StreamProvider<List<Profile>>.value(
-                value: db.streamProfilesInRadius(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Settings()),
+        //map marker provider, this really could be somewhere else
+        ChangeNotifierProvider(create: (context) => MarkerPopupModel()),
+        //todo:decide where to put these later
+        //have to rewrite these
+        StreamProvider<List<Post>>.value(value: db.streamPosts()),
+        StreamProvider<List<Profile>>.value(
+            value: db.streamProfilesInRadius(
                 radius: 50, currentLocation: location)),
-                StreamProvider<List<ChatSession>>(
-                create: (_) => db.streamChatSessions(uid),
-                )
-        ],
-        child: MaterialApp(
+        StreamProvider<List<ChatSession>>(
+          create: (_) => db.streamChatSessions(uid),
+        )
+      ],
+      child: Consumer<Settings>(builder: (context, settings, child) {
+        return MaterialApp(
             title: 'Flutter Demo',
-            theme: context.watch<Settings>().getTheme(),
+            theme: settings.getTheme(),
             home: NavigationController(),
             routes: <String, WidgetBuilder>{
               //named routes
@@ -88,6 +88,8 @@ class _MyAppState extends State<MyApp> {
               '/login': (BuildContext context) => LoginPage(),
               '/chatPage': (BuildContext context) => ChatPage(),
               '/map': (BuildContext context) => MapPage(),
-            }));
+            });
+      }),
+    );
   }
 }

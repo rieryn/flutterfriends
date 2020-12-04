@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:major_project/models/chat_message_model.dart';
+import 'package:major_project/models/settings_model.dart';
 import 'package:major_project/services/firebase_storage.dart';
 import 'package:major_project/services/firestore_services.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ class ChatPane extends StatefulWidget {
   final String peerProfileImageURL;
   final String sessionId;
 
-  ChatPane({Key key, @required this.peerUID, @required this.peerProfileImageURL, @required this.sessionId})
+  ChatPane({Key key, this.peerUID, this.peerProfileImageURL, this.sessionId})
       : super(key: key);
 
   @override
@@ -49,7 +50,6 @@ class ChatPaneState extends State<ChatPane> {
 
   @override
   Widget build(BuildContext context) {
-    print("sessionid " +widget.sessionId);
     _user = Provider.of<User>(context);
     return Stack(
       children: <Widget>[
@@ -64,13 +64,14 @@ class ChatPaneState extends State<ChatPane> {
   }
 
   Widget messageListView() {
+    var _settings = context.watch<Settings>();
     return Expanded(
       child: widget.sessionId == null ?
             Center(
           child: Text("No messages :("),
             )
           : StreamBuilder(
-              stream: _db.streamChatMessages(widget.sessionId, _user.uid),
+              stream: _db.streamChatMessages(_settings.getChatSession(), _user.uid),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();}

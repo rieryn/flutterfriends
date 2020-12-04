@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/views/components/add_post_bottomsheet.dart';
 import 'package:major_project/views/components/add_post_dialog.dart';
@@ -24,55 +25,31 @@ class _HomePageState extends State<HomePage> {
       length: 3,
       child: Scaffold(
           drawer: Drawer(//profile
-
           ),
           endDrawer: Drawer(//settings, etc.
 
           ),
-          body: NestedScrollView(
-            // scroll should collapse app bar
-            // scroll controller not working
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  // open camera
-                  leading: IconButton(
-                    icon: Icon(Icons.camera),
-                    onPressed: null,
-                  ),
-                  // dope title
-                  title: Text('Localize'),
-                  centerTitle: true,
-                  actions: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.person),
-                      onPressed: () async {
-                        Navigator.pushNamed(context, '/UserSignIn');
-                      },
+          body: CustomScrollView(
+            slivers: <Widget>[
+          const SliverFloatingBar(
+            trailing: Text("test"),
+          pinned: true,
+              floating:true,
+
+              title: Text('test2'),
+            ),
+              SliverToBoxAdapter(
+                child: Container(
+                      child:FeedTab(),
+                      height: MediaQuery.of(context).size.height*0.6,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.green,
                     ),
-                    IconButton(
-                      // settings menue
-                      icon: Icon(Icons.settings),
-                      onPressed: () {
-                        _settings();
-                      },
                     )
                   ],
-                  floating: true,
-                  pinned: true,
-                  snap: true,
                 ),
-              ];
-            },
-            body: TabBarView(
-              children: [
-                FeedTab(),
-                ThoughtsTab(),
-                CheckInsTab(),
-              ],
-            ),
-          ),
+
+
           // add post button
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: FloatingActionButton.extended(
@@ -83,9 +60,8 @@ class _HomePageState extends State<HomePage> {
                 var user = Provider.of<User>(context, listen: false);
                 bool loggedIn = user != null;
                 if(loggedIn){ //bring up addpost
-                  showModalBottomSheet(
+                  showBottomSheet(
                       context: context,
-                      isScrollControlled: true,
                       builder: (context) => SingleChildScrollView(
                         child: Container(
                           padding: EdgeInsets.only(

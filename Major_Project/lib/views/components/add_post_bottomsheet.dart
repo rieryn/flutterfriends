@@ -21,7 +21,8 @@ class AddPostBottomsheet extends StatelessWidget {
     String _post;
 
     if(loggedIn){
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
       height: MediaQuery.of(context).size.height*0.4,
       color: Color(0xFF737373),
       child: Container(
@@ -98,7 +99,7 @@ class AddPostBottomsheet extends StatelessWidget {
     );
     }
     else{
-      return Container(
+      return AnimatedContainer(
         child: Container(
             padding: EdgeInsets.all(20.0),
             decoration: BoxDecoration(
