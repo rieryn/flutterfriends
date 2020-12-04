@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
+import 'package:lottie/lottie.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/views/components/add_post_bottomsheet.dart';
 import 'package:major_project/views/components/add_post_dialog.dart';
+import 'package:major_project/views/components/profile_drawer.dart';
 import 'package:major_project/views/pages/home_page/posts_tab.dart';
 import 'package:provider/provider.dart';
 import 'feed_tab.dart';
@@ -24,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          drawer: Drawer(//profile
+          drawer: Drawer(child:ProfileDrawer()
           ),
           endDrawer: Drawer(//settings, etc.
 
@@ -45,7 +47,17 @@ class _HomePageState extends State<HomePage> {
                       width: MediaQuery.of(context).size.width,
                       color: Colors.green,
                     ),
-                    )
+
+                    ),
+              SliverToBoxAdapter(
+                child: Container(
+                  child: Lottie.asset('test_animation.json'),
+                  height: MediaQuery.of(context).size.height*0.3,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.green,
+                ),
+
+              )
                   ],
                 ),
 

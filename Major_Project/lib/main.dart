@@ -1,3 +1,4 @@
+import 'package:animated_splash/animated_splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -81,7 +82,12 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
             title: 'Flutter Demo',
             theme: settings.getTheme(),
-            home: NavigationController(),
+            home: AnimatedSplash(
+              imagePath: 'assets/google_logo.png',
+              home: NavigationController(),
+              duration: 2500,
+              type: AnimatedSplashType.StaticDuration,
+            ),
             routes: <String, WidgetBuilder>{
               //named routes
               '/home': (BuildContext context) => NavigationController(),
@@ -92,4 +98,7 @@ class _MyAppState extends State<MyApp> {
       }),
     );
   }
+  Function duringSplash = () {
+    return;
+  };
 }

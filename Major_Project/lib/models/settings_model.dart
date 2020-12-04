@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:major_project/data/themes/blue_theme.dart';
 import 'package:major_project/data/themes/dark_theme.dart';
 import 'package:major_project/data/themes/sunset_theme.dart';
@@ -61,9 +62,10 @@ class Settings with ChangeNotifier {
     await _prefs.setString('currentChatPeer', chatPeer);
     notifyListeners();
   }
-  saveMapTheme(String mapTheme) async {
-    _mapTheme = mapTheme;
-    await _prefs.setString('theme', mapTheme);
+  saveMapTheme(String themeName) async {
+    rootBundle.loadString("/data/maps"+themeName).then((value) {
+      _mapTheme = value;});
+    await _prefs.setString('mapTheme', _mapTheme);
     notifyListeners();
   }
   ThemeData parseTheme(String theme){

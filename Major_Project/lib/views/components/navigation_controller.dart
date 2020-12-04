@@ -18,6 +18,7 @@ class NavigationController extends StatefulWidget {
 class _NavigationControllerState extends State<NavigationController> {
   final PageStorageBucket bucket = PageStorageBucket();
   final _db = FirebaseService();
+  AnimationController _animationController;
   int _selectedIndex = 0;
   SharedPreferences prefs;
   String sessionId;
@@ -26,6 +27,7 @@ class _NavigationControllerState extends State<NavigationController> {
   @override
   void initState() {
     _pageController = PageController();
+    //_animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     super.initState();
   }
   // storage keys allow the pages to not be reloaded every set state and retain their scroll position
@@ -37,6 +39,7 @@ class _NavigationControllerState extends State<NavigationController> {
   ];
   @override
   void dispose() {
+    //_animationController.dispose();
     _pageController.dispose();
     super.dispose();
   }

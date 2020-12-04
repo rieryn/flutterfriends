@@ -100,6 +100,7 @@ class AddPostBottomsheet extends StatelessWidget {
     }
     else{
       return AnimatedContainer(
+        duration: Duration(milliseconds: 100),
         child: Container(
             padding: EdgeInsets.all(20.0),
             decoration: BoxDecoration(

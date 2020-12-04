@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:major_project/models/markerpopup_model.dart';
 import 'package:major_project/models/post_model.dart';
 import 'package:major_project/models/profile_model.dart';
+import 'package:major_project/models/settings_model.dart';
 import 'package:major_project/services/firestore_services.dart';
 import 'package:major_project/services/marker_bitmapper.dart';
 import 'package:major_project/services/localdb/covid_db.dart';
@@ -286,6 +287,7 @@ class _MapPageState extends State<MapPage> {
                 setState(() {
                 });
                 mapController = controller;
+                controller.setMapStyle(context.read<Settings>().getMapTheme());
               },
               circles: _circles,
               markers: _markers,
