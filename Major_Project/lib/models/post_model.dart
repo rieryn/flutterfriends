@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'user_comment_model.dart';
@@ -20,7 +21,7 @@ class Post {
   final int numLikes;
   //final Map comments;
   final DateTime postedDate;
-
+  final double distance;
   Post({
     //firebase docReference
     this.postid,
@@ -43,16 +44,17 @@ class Post {
 
     //firebase geopoint
     this.location,
+    this.distance,
   });
-  factory Post.fromFirestore(DocumentSnapshot doc) {
-    print(doc);
-    Map<String, dynamic> data = doc.data();
-    double lat = data['location'].latitude ?? 0;
-    double lng = data['location'].longitude ?? 0;
-    DateTime parsedTimestamp = DateTime.parse(data['postedDate'].toDate().toString());
+  factory Post.fromFirestore(DistanceDocSnapshot doc) {
+    print(doc.documentSnapshot.id);
+    Map<String, dynamic> data = doc.documentSnapshot.data();
+    double lat = doc.coordinates.latitude ?? 0;
+    double lng = doc.coordinates.longitude ?? 0;
+    //DateTime parsedTimestamp = DateTime.parse(data['postedDate'].toDate().toString());
     //todo: add some logic to x minutes ago
     return Post(
-      postid: doc.id,
+      postid: doc.documentSnapshot.id,
       postedBy: data['postedBy'] ?? '',
       numLikes: data['numLikes'] ?? 0,
       username: data['username'] ?? '',
@@ -62,7 +64,8 @@ class Post {
       userImgURL: data['userImgURL'] ?? '',
       postImgURL: data['postImgURL'] ?? '',
       location: LatLng(lat, lng),
-      postedDate: parsedTimestamp ?? '',
+      //postedDate: parsedTimestamp ?? '',
+      distance: doc.distance ?? 0,
     );
   }
 }

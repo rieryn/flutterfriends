@@ -16,6 +16,7 @@ Future<String> firebasePushImageFile(File imageFile, String hash) async {
   } on FirebaseException catch (e){
     print (task.snapshot);
   }
+  return null;
 }
 //todo: add permissions for ios
 Future<String> pickImageFromGallery() async {
@@ -30,6 +31,7 @@ Future<String> pickImageFromGallery() async {
     return imageURL;
   }
   else{print('no file picked');}
+  return null;
 }
 //todo: add permissions for ios
 Future<String> pickImageFromCamera() async {
@@ -44,4 +46,5 @@ Future<String> pickImageFromCamera() async {
     return imageURL;
   }
   else{print('no file picked');}
+  return null;
 }

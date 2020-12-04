@@ -69,11 +69,13 @@ class _MyAppState extends State<MyApp> {
         //map marker provider, this really could be somewhere else
         ChangeNotifierProvider(create: (context) => MarkerPopupModel()),
         //todo:decide where to put these later
-        //have to rewrite these
-        StreamProvider<List<Post>>.value(value: db.streamPosts()),
+        //have to rewrite these to be mutable
+        StreamProvider<List<Post>>.value(
+            value: db.streamPostsInRadius(
+                radius: 2550, currentLocation: location)),
         StreamProvider<List<Profile>>.value(
             value: db.streamProfilesInRadius(
-                radius: 50, currentLocation: location)),
+                radius: 2550, currentLocation: location)),
         StreamProvider<List<ChatSession>>(
           create: (_) => db.streamChatSessions(uid),
         )

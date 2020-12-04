@@ -21,7 +21,7 @@ class FirebaseService {
   final String profileCollectionReference = 'profiles';
   final String chatSessionCollectionReference = 'chatSessions';
   final String profileChatsCollectionReference = 'userChatSessions';
-  Stream<Post> streamPost(String id) {
+ /* Stream<Post> streamPost(String id) {
     return _db
         .collection(postCollectionReference)
         .doc(id)
@@ -34,25 +34,49 @@ class FirebaseService {
 
     return ref.snapshots().map((list) =>
         list.docs.map((doc) => Post.fromFirestore(doc)).toList());
+  }*/
+  Stream<List<Post>> streamPostsInRadius({double radius, LocationData currentLocation}) {
+    if(currentLocation==null){return null;}
+    GeoFirePoint center = geo.point(
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude);
+    Stream<List<DistanceDocSnapshot>> streamSnaps;
+    String field = 'position';
+    var collectionReference = _db.collection('posts');
+    streamSnaps = geo.collection(collectionRef: collectionReference)
+        .within(
+        center: center,
+        radius: radius ?? 50,
+        field: field);
+     streamSnaps.map((list) =>
+        list.map(
+              (doc) => print(doc),
+        ));
+    return streamSnaps.map((list) =>
+        list.map(
+            (doc) => Post.fromFirestore(doc),
+        ).toList());
   }
 
   //every method calling imgurl needs to check null
   //add post
-  Future<void> addPost(
+  void addPost(
       {String username, String body, String userImgURL, String postImgURL, String uid, LatLng location}) {
     print("adding at location: "+location.toString());
-    return _db
-        .collection(postCollectionReference)
-        .doc()
+    GeoFirePoint myLocation = geo.point(latitude:location.latitude,longitude:location.longitude);
+    var id = _db.collection(postCollectionReference)
+        .doc().id;
+    _db.collection(postCollectionReference)
+        .doc(id)
         .set({
       "username": username ?? '',
       "body": body ?? '',
       "userImgURL": userImgURL ?? 'http://placekitten.com/200/300',
       "postImgURL": postImgURL ?? 'http://placekitten.com/200/300',
-      "location": GeoPoint(location.latitude, location.longitude) ??
-          GeoPoint(0, 0),
       "postedBy": uid ?? '',
       "postedDate": Timestamp.now() ?? 0,
+      'name': id,
+      'position': myLocation.data,
     });
   }
 /*
@@ -81,7 +105,7 @@ class FirebaseService {
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude);
     Stream<List<DistanceDocSnapshot>> streamSnaps;
-    String field = 'profiles.location.position';
+    String field = 'position';
     var collectionReference = _db.collection('profiles');
     streamSnaps = geo.collection(collectionRef: collectionReference)
         .within(
@@ -108,9 +132,7 @@ class FirebaseService {
     GeoFirePoint myLocation = geo.point(latitude:location.latitude,longitude:location.longitude);
     return _db.collection(profileCollectionReference)
         .doc(uid)
-        .collection('locations')
-        .doc('geofirepoint')
-        .set({'name': 'random name', 'position': myLocation.data});
+        .set({'name': 'random name', 'position': myLocation.data}, SetOptions(merge: true));
   }
 
   //get profile

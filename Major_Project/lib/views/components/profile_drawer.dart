@@ -7,15 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:major_project/models/chat_session_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:major_project/models/settings_model.dart';
 
 class ProfileDrawer extends StatelessWidget{
   String peerUID;
   String sessionId;
   String peerProfileImageURL;
   User _user;
+  Settings _settings;
   @override
   Widget build(BuildContext context) {
     _user = context.watch<User>();
+    _settings = context.watch<Settings>();
     if(_user != null) {
       return Column(
           children: <Widget>[
@@ -25,15 +28,19 @@ class ProfileDrawer extends StatelessWidget{
               color: Colors.transparent,
            child: Stack(
               children: <Widget>[
-                CachedNetworkImage(
-                    height:160,
-                    imageUrl: "http://placekitten.com/500/500"),
+                Container(height:180,
+                    width: 600,
+                    child:FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child:CachedNetworkImage(
+                        imageUrl: "http://placekitten.com/500/500"),
+                )),
                 Container(
                   height: 100,
                   color: Colors.transparent,
                 ),
                 Positioned(
-                  top:130 ,
+                  top:150 ,
                   left: 10,
                   width:80,
                   height:80,
@@ -56,22 +63,66 @@ class ProfileDrawer extends StatelessWidget{
                   )
               ),
             ),
-            Container(
-              height: 70,
-              color: Colors.blueGrey,
-              child: InkWell(
+            InkWell(
                 child: ExpansionTile(
                     title: Text("Settings"),
                     children: [
                       InkWell(
-                        child: ListTile(
-                          title: Text("blue"),
+                        child: ExpansionTile(
+                            title: Text("Map"),
+                            children: [
+                              InkWell(
+                                child: ListTile(
+                                  title: Text("dark"),
+                                  onTap: () => {_settings.saveMapTheme("/dark.txt")},
+                                ),
+                              ),
+                              InkWell(
+                                child: ListTile(
+                                  title: Text("forest"),
+                                  onTap: () => {_settings.saveMapTheme("/forest.txt")},
+                                ),
+                              ), InkWell(
+                                child: ListTile(
+                                  title: Text("night"),
+                                  onTap: () => {_settings.saveMapTheme("/night.json")},
+                                ),
+                              ), InkWell(
+                                child: ListTile(
+                                  title: Text("candy"),
+                                  onTap: () => {_settings.saveMapTheme("/candy.json")},
+                                ),
+                              ),
+                            ]
+                        ),
+                      ),
+                      InkWell(
+                        child: ExpansionTile(
+                            title: Text("Theme"),
+                            children: [
+                              InkWell(
+                                child: ListTile(
+                                  title: Text("blue"),
+                                ),
+                              )
+                            ]
+                        ),
+                      ),
+                      InkWell(
+                        child: ExpansionTile(
+                            title: Text("Theme"),
+                            children: [
+                              InkWell(
+                                child: ListTile(
+                                  title: Text("blue"),
+                                ),
+                              )
+                            ]
                         ),
                       )
                     ]
                 ),
               ),
-            ),
             Container(
               height: 70,
               color: Colors.yellow,

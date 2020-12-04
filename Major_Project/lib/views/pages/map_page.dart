@@ -66,6 +66,8 @@ class _MapPageState extends State<MapPage> {
   void setPostMarkers(BitmapDescriptor messageicon){
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
     final postsList = Provider.of<List<Post>>(context);
+    print("postsList");
+    print(postsList);
     if(postsList !=null) {
       _markers.clear();
       postsList.forEach((v) =>
@@ -97,6 +99,8 @@ class _MapPageState extends State<MapPage> {
   void setProfileMarkers(BitmapDescriptor userIcon){
     final providerObject = Provider.of<MarkerPopupModel>(context, listen: false);
     final profileList = Provider.of<List<Profile>>(context);
+    print("profilelist");
+    print(profileList);
     if(profileList !=null) {
       _markers.clear();
       profileList.forEach((v) =>
@@ -182,7 +186,9 @@ class _MapPageState extends State<MapPage> {
       ),
     );
 
-    return Scaffold(
+    return
+      Scaffold(
+
       appBar: AppBar(
         title: Text('Map'),
         backgroundColor: Colors.blue,
@@ -287,7 +293,6 @@ class _MapPageState extends State<MapPage> {
                 setState(() {
                 });
                 mapController = controller;
-                controller.setMapStyle(context.read<Settings>().getMapTheme());
               },
               circles: _circles,
               markers: _markers,

@@ -83,7 +83,9 @@ class _NavigationControllerState extends State<NavigationController> {
   PageController _pageController;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async =>false,
+      child:Scaffold(
         bottomNavigationBar: BottomNavyBar(
           selectedIndex: _selectedIndex,
           showElevation: true, // use this to remove appBar's elevation
@@ -121,23 +123,25 @@ class _NavigationControllerState extends State<NavigationController> {
           ],
         ),
         // SizedBox(height: MediaQuery.of(context).size.height/14, child:_bottomNavigationBar(_selectedIndex)),
-    body: SizedBox.expand(
-    child: PageView(
-    controller: _pageController,
-      onPageChanged: (index) {
-        setState(() => _currentIndex = index);
-      },
-      children: <Widget>[
-        HomePage(),
-        MapPage(),
-        ChatPage(),
-        LiveChatPage(),
-        Container(color: Colors.deepPurpleAccent),
-      ],
-    ),
-    ),
-    );
+        body: SizedBox.expand(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            children: <Widget>[
+              HomePage(),
+              MapPage(),
+              ChatPage(),
+              LiveChatPage(),
+              Container(color: Colors.deepPurpleAccent),
+            ],
+          ),
+        ),
+      ),
 
+
+    );
 
   }
 }
