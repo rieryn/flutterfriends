@@ -62,8 +62,6 @@ class _HomePageState extends State<HomePage> {
               )
                   ],
                 ),
-
-
           // add post button
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: FloatingActionButton.extended(
