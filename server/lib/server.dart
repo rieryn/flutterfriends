@@ -1,5 +1,7 @@
+/// pg_server
+///
 /// A Aqueduct web server.
-library server;
+library pg_server;
 
 export 'dart:async';
 export 'dart:io';

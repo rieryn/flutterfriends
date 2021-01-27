@@ -1,7 +1,7 @@
 name: pg_server
-description: A photo gallery server built with Aqueduct.
+description: 
 version: 0.0.1
-author: Jermaine Oppong
+author: 
 
 environment:
   sdk: ">=2.0.0 <3.0.0"

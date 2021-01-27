@@ -1,16 +1,16 @@
 import 'package:aqueduct/aqueduct.dart';
 
-class Gallery extends ManagedObject<_Gallery> implements _Gallery {}
+class Image extends ManagedObject<_Image> implements _Image {}
 
-class _Gallery {
+class _Image {
   @primaryKey
   int id;
 
   String title;
-  DateTime publishDate;
+  DateTime created;
 
   @Column(nullable: true)
-  String description;
+  String desc;
 
   @Column(nullable: true)
   String thumbnail;

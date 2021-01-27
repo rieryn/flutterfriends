@@ -1,7 +1,7 @@
-import 'package:pg_server/pg_server.dart';
+import 'package:pg_server/server.dart';
 
 import 'src/config.dart';
-import 'src/controllers/gallery_controller.dart';
+import 'src/controllers/image_controller.dart';
 
 /// This type initializes an application.
 class PgServerChannel extends ApplicationChannel {
@@ -31,7 +31,7 @@ class PgServerChannel extends ApplicationChannel {
   Controller get entryPoint {
     final router = Router();
 
-    router.route("/gallery/[:id]").link(() => GalleryController(context));
+    router.route("/image/[:id]").link(() => ImageController(context));
 
     return router;
   }
