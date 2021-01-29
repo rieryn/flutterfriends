@@ -1,0 +1,87 @@
+{
+    "title": {
+        "title": "Localize"
+    },
+
+    "homepage": {
+        "feed": "Feed",
+        "checkin": "Check-In",
+        "post": "Post"
+    },
+
+    "drawer": {
+        "aboutme": "About me",
+        "settings": "Settings",
+        "languages": "Languages",
+        "analytics": "Analytics",
+        "logout": "Logout",
+        "map": "Map",
+        "dark": "Dark",
+        "forest": "Forest",
+        "night": "Night",
+        "candy": "Candy",
+        "theme": "Theme",
+        "blue": "Blue",
+        "sunset": "Sunset",
+        "signin": "Please sign-in or create a new account to continue."
+    },
+    "languages": {
+        "english": "English",
+        "french": "French"
+    },
+    "snackbar": {
+        "signedin": "Already Signed In!"
+    },
+
+    "mappage": {
+        "map": "Map",
+        "clicked": "Clicked"
+    },
+    "chatpage": {
+        "nomessage": "No messages :(",
+        "message": "Message"
+    },
+
+    "bottomnav": {
+        "home": "Home",
+        "explore": "Explore",
+        "connect": "Connect",
+        "livechat": "Live Chat",
+        "profile": "Profile"
+    },
+
+    "datatable": {
+        "title": "Popular Posts Nearby",
+        "posts": "Posts",
+        "likes": "Likes"
+    },
+    "charts": {
+        "likes": "Likes"    
+    },
+    "postpage": {
+        "post": "Post",    
+        "checkin": "Check In",
+        "postmessage": "What are you up to?",
+        "checkinmessage": "What's Happening?",
+        "checkinto": "Check Into: ",
+        "posted": "Posted",
+        "error": "Error"
+
+    },
+    "login": {
+        "signinmessage": "Please sign-in or create a new account to continue.",
+        "login": "Sign In",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "pickusername": "Pick a username!",
+        "usernotfound": "User not found!",
+        "wrongpass": "Wrong Password",
+        "shortpass": "Password is too short, it must be atleast 6 characters."
+    },
+    "picker": {
+        "camera": "Camera",
+        "gallary": "Gallary"
+
+    }
+
+}

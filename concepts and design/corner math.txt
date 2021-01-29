@@ -1,0 +1,15 @@
+0.5 * bh2 + b3h + 0.5 * b2w + b1w
+
+b1: b2h + b3h
+b2: b3h + b1w
+b3: b1w + b2w
+
+b3: b2w
+b1, b2: b3h
+b2, b3: b1w
+b1: b2h
+
+b3: b2h
+b1, b2: b3w
+b2, b3: b1h
+b1: b2w

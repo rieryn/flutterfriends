@@ -1,0 +1,12 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+
+  "maptitle": "map",
+  "@maptitle": {
+    "description": "header for map widget"
+  }
+
+}

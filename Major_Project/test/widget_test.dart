@@ -1,0 +1,43 @@
+// This is a basic Flutter widget test.
+//
+// To perform an interaction with a widget in your test, use the WidgetTester
+// utility that Flutter provides. For example, you can send tap and scroll
+// gestures. You can also use WidgetTester to find child widgets in the widget
+// tree, read text, and verify that the values of widget properties are correct.
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:major_project/main.dart';
+import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
+
+Future<void> main() async {
+  final dummySnapshot = [
+    {"name": "Filip", "votes": 15},
+    {"name": "Abraham", "votes": 14},
+  ];
+  final instance = MockFirestoreInstance();
+  await instance.collection('users').add({
+    'username': 'Bob',
+  });
+  final snapshot = await instance.collection('users').get();
+  print(snapshot.documents.length); // 1
+  print(snapshot.documents.first['username']); // 'Bob'
+  print(instance.dump());
+  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(MyApp());
+
+    // Verify that our counter starts at 0.
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
+
+    // Tap the '+' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+
+    // Verify that our counter has incremented.
+    expect(find.text('0'), findsNothing);
+    expect(find.text('1'), findsOneWidget);
+  });
+}

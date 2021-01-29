@@ -1,0 +1,218 @@
+p1n = p3n - p3w / 2 - p2w - p1w / 2
+p1o = p1n - p1c
+p2n = p3n - p3w / 2 - p2w / 2
+p2o = p2n - p2c
+p3o = p3n - p3c
+
+p1o = p3n - p3w / 2 - p2w - p1w / 2 - p1c
+p2o = p3n - p3w / 2 - p2w / 2 - p2c
+
+p3n = p2o + p3w / 2 + p2w / 2 + p2c
+
+p1o = 
+
+to = p1o + p2o + p3o
+to = p1n - p1c + p2n - p2c + p3n - p3c
+to = p3n - p3w / 2 - p2w - p1w / 2 - p1c + p3n - p3w / 2 - p2w / 2 - p2c + p3n - p3c
+to = 3*p3n - p3w - 1.5*p2w - p1w / 2 - p1c - p2c -p3c
+
+2-box case:
+
+p1n = p2n - p2w / 2 - p1w / 2
+p1o = p1n - p1c
+p2o = p2n - p2c
+
+p1o = p2n - p2w / 2 - p1w / 2 - p1c
+
+to = p1o + p2o
+to = p2n - p2w / 2 - p1w / 2 - p1c + p2n - p2c
+0 = p2n - p2w / 2 - p1w / 2 - p1c + p2n - p2c
+0 = 2*p2n - p2w / 2 - p1w / 2 - p1c - p2c
+2*p2n = p2w / 2 + p1w / 2 + p1c + p2c
+p2n = (p2w / 2 + p1w / 2 + p1c + p2c) / 2
+
+p1n = (p2w / 2 + p1w / 2 + p1c + p2c) / 2 - p2w / 2 - p1w / 2
+p1n = (p2w / 2 + p1w / 2 + p1c + p2c - p2w - p1w) / 2
+p1n = (-0.5*p2w - 0.5*p1w + p1c + p2c) / 2
+
+if: p1w = 2 | p2w = 2 | p1c = 3 | p2c = 4
+then:
+p1n = (-0.5*2 - 0.5*2 + 3 + 4) / 2 = 2.5
+p2n = (2 / 2 + 2 / 2 + 3 + 4) / 2 = 4.5
+
+
+p1n = p2n - p2w / 2 - p1w / 2
+p1o = p1n - p1c
+p2o = p2n - p2c
+
+p1o = p2n - p2w / 2 - p1w / 2 - p1c
+
+to = p1o + p2o
+
+0 = p1o + p2o
+
+p1n = x1 | p2n = x2 | p1o = x3 | p2o = x4
+
+0 = x3 + x4
+p2w / 2 + p1w / 2 = x2 - x1
+p1c = x1 - x3
+p2c = x2 - x4
+
+0*x1 + 0*x2 + x3 + x4 = 0
+-x1 + x2 + 0*x3 + 0*x4 = p2w / 2 + p1w / 2
+x1 + 0*x2 - x3 + 0*x4 = p1c
+0*x1 + x2 + 0*x3 - x4 = p2c
+
+angles:
+
+p1n = p2n - p2w / 2 - p1w / 2
+p1o = p1n - p1c
+p2o = p2n - p2c
+
+t1n = arctan((dw * tan(t2n) - t2w / 2 - t1w / 2) / dw)
+t1o = t1n - t1c
+t2o = t2n - t2c
+0 = t1o + t2o
+
+t1n = x1 | t2n = x2 | t1o = x3 | t2o = x4
+
+x1 = arctan((dw * tan(x2) - t2w / 2 - t1w / 2) / dw)
+x3 = x1 - t1c
+x4 = x2 - t2c
+0 = x3 + x4
+
+tan(x1) = (dw * tan(x2) - t2w / 2 - t1w / 2) / dw
+dw * tan(x1) = dw * tan(x2) - t2w / 2 - t1w / 2
+
+dw * tan(x1) = x5 | dw * tan(x2) = x6
+
+x5 = x6 - t2w / 2 - t1w / 2
+x3 = arctan(x5 / dw) - t1c
+x4 = arctan(x6 / dw) - t2c
+0 = x3 + x4
+
+arctan(x5 / dw) = x7 | arctan(x6 / dw) = x8
+
+x5 = 
+
+t1n = arctan((dw * tan(t2n) - t2w / 2 - t1w / 2) / dw)
+t1o = t1n - t1c
+t2o = t2n - t2c
+0 = t1o + t2o
+
+0 = arctan((dw * tan(t2n) - t2w / 2 - t1w / 2) / dw) - t1c + t2n - t2c
+t1c - t2n + t2c = arctan((dw * tan(t2n) - t2w / 2 - t1w / 2) / dw)
+tan(t1c - t2n + t2c) = (dw * tan(t2n) - t2w / 2 - t1w / 2) / dw
+dw * tan(t1c - t2n + t2c) = dw * tan(t2n) - t2w / 2 - t1w / 2
+dw * tan(t1c - t2n + t2c) = 0.5*dw*tan(t2n) - 0.5*t2w / 2 - 0.5*t1w / 2
+dw * tan(t1c - t2n + t2c) - 0.5*dw*tan(t2n) = -0.5*t2w / 2 - 0.5*t1w / 2
+
+
+t1n = arctan((dw*tan(t2n) + t2w / 2 + t1w / 2) / dw)
+t1o = t1n - t1c
+t2o = t2n - t2c
+0 = t1o + t2o
+
+39 - x = arctan(tan(x) + 2 / 9)
+tan(39 - x) = tan(x) + 2 / 9
+(tan(39) - tan(x)) / (1 + tan(39)*tan(x)) = tan(x) + 2 / 9
+tan(39) - tan(x) = tan(x)*(1 + tan(39)*tan(x)) + (2 / 9) * (1 + tan(39)*tan(x))
+tan(39) - tan(x) = tan(x) + tan(39)*tan(x)*tan(x) + (2 / 9) + (2 / 9)*tan(39)*tan(x)
+
+x2 = tan(x)
+
+tan(39) - x2 = x2 + tan(39)*x2*x2 + 2 / 9 + (2 / 9)*tan(39)*x2
+0 = tan(39)*((x2)^2) + (2 + (2 / 9)*tan(39))*x2 + ((2 / 9) - tan(39))
+
+0 = arctan((dw*tan(t2n) + t2w / 2 + t1w / 2) / dw) - t1c + t2n - t2c
+t1c - t2n + t2c = arctan((dw*tan(t2n) + t2w / 2 + t1w / 2) / dw)
+tan(t1c - t2n + t2c) = (dw*tan(t2n) + t2w / 2 + t1w / 2) / dw
+tan(t1c - t2n + t2c) = tan(t2n) + t2w / (2 * dw) + t1w / (2 * dw)
+(tan(t1c + t2c) - tan(t2n)) / (1 + tan(t1c + t2c)*tan(t2n)) = 
+	tan(t2n) + t2w / (2 * dw) + t1w / (2 * dw)
+tan(t1c + t2c) - tan(t2n) = (1 + tan(t1c + t2c)*tan(t2n))*tan(t2n) +
+	(1 + tan(t1c + t2c)*tan(t2n))*(t2w / (2 * dw) + t1w / (2 * dw))
+tan(t1c + t2c) - tan(t2n) = tan(t2n) + tan(t1c + t2c)*tan(t2n)*tan(t2n) +
+	t2w / (2 * dw) + t1w / (2 * dw) + 
+	(t2w / (2 * dw) + t1w / (2 * dw))*tan(t1c + t2c)*tan(t2n)
+
+x = tan(t2n)
+
+tan(t1c + t2c) - x = x + tan(t1c + t2c)*(x^2) + t2w / (2 * dw) + t1w / (2 * dw) +
+	(t2w / (2 * dw) + t1w / (2 * dw))*tan(t1c + t2c)*x
+
+0 = tan(t1c + t2c)*(x^2) + (2 + (t2w / (2 * dw) + t1w / (2 * dw))*tan(t1c + t2c))*x +
+	(t2w / (2 * dw) + t1w / (2 * dw) - tan(t1c + t2c))
+
+x = (-(2 + (t2w / (2 * dw) + t1w / (2 * dw))*tan(t1c + t2c)) +-
+	sqrt(((2 + (t2w / (2 * dw) + t1w / (2 * dw))*tan(t1c + t2c))^2) -
+	4*tan(t1c + t2c)*(t2w / (2 * dw) + t1w / (2 * dw) - tan(t1c + t2c))) / (2 *
+	tan(t1c + t2c))
+
+average grouping:
+
+p1n = p2n - p2w / 2 - p1w / 2
+p1o = p1n - p1c
+p2o = p2n - p2c
+
+0 = p1o + p2o
+p1o = p1n - aa
+p2o = p2n - aa
+p1n = p2n - p2w / 2 - p1w / 2
+
+x1 = p1n | x2 = p2n | x3 = p1o | x4 = p2o
+
+x3 + x4 = 0
+x1 - x3 = aa
+x2 - x4 = aa
+x2 - x1 = p2w / 2 + p1w / 2
+
+0 = p1o + p2o + p3o
+p1o = p1n - aa
+p2o = p2n - aa
+p3o = p3n - aa
+p1n = p3n - p3w / 2 - p2w - p1w / 2
+p2n = p3n - p3w / 2 - p2w / 2
+
+x1 = p1n | x2 = p2n | x3 = p3n | x4 = p1o | x5 = p2o | x6 = p3o
+
+x4 + x5 + x6 = 0
+x1 - x4 = aa
+x2 - x5 = aa
+x3 - x6 = aa
+x3 - x1 = p3w / 2 + p2w + p1w / 2
+x3 - x2 = p3w / 2 + p2w / 2
+
+spacing
+
+p1n = p2n - p2w / 2 - p1w / 2 - 1
+p1o = p1n - p1c
+p2o = p2n - p2c
+
+0 = p1o + p2o
+p1o = p1n - aa
+p2o = p2n - aa
+p1n = p2n - p2w / 2 - 1 - p1w / 2
+
+x1 = p1n | x2 = p2n | x3 = p1o | x4 = p2o
+
+x3 + x4 = 0
+x1 - x3 = aa
+x2 - x4 = aa
+x2 - x1 = p2w / 2 + 1 + p1w / 2
+
+0 = p1o + p2o + p3o
+p1o = p1n - aa
+p2o = p2n - aa
+p3o = p3n - aa
+p1n = p3n - p3w / 2 - 1 - p2w - 1 - p1w / 2
+p2n = p3n - p3w / 2 - 1 - p2w / 2
+
+x1 = p1n | x2 = p2n | x3 = p3n | x4 = p1o | x5 = p2o | x6 = p3o
+
+x4 + x5 + x6 = 0
+x1 - x4 = aa
+x2 - x5 = aa
+x3 - x6 = aa
+x3 - x1 = p3w / 2 + 1 + p2w + 1 + p1w / 2
+x3 - x2 = p3w / 2 + 1 + p2w / 2
